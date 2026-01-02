@@ -1,9 +1,3 @@
-[submodule "glhf"]
-	path = glhf
-	url = https://github.com/glfw/glfw.git
-[submodule "glhw"]
-	path = glhw
-	url = https://github.com/glfw/glfw.git
 [submodule "glfw"]
 	path = glfw
 	url = https://github.com/glfw/glfw.git
