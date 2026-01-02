@@ -18,7 +18,7 @@ jobs:
       run: cmake -S . -B build
 
     - name: Create Package (optional, using CPack with CMake)
-      run: cmake --build ${{github.workspace}}/build build
+      run: cmake --build build
       # This step uses CPack to create a distributable archive (e.g., .tar.gz, .zip)
 
     - name: Upload Artifacts
