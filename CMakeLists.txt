@@ -5,7 +5,7 @@ project(graphics-engine)
 add_executable(${PROJECT_NAME} 
     src/main.cpp
     src/app.cpp
-    src/vector3.cpp
-    src/vector2.cpp
+    src/vectors/vector3.cpp
+    src/vectors/vector2.cpp
 )
 

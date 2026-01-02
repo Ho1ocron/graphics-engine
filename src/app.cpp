@@ -1,6 +1,6 @@
 #include "app.h"
-#include "vector3.h"
-#include "vector2.h"
+#include "vectors/vector3.h"
+#include "vectors/vector2.h"
 
 #include <stdio.h>
 
