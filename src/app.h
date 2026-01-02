@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GLFW/glfw3.h>
+#include <freetype/freetype.h>
 
 
 class MyClass {
