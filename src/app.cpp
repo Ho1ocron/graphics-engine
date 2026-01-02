@@ -1,17 +1,17 @@
-#include "app.h"
-#include "vector3.h"
-#include "vector2.h"
-
 #include <stdio.h>
-
 #include <GLFW/glfw3.h>
+
+#include <vector3.h>
+#include <vector2.h>
+
+#include "app.h"
 
 
 void MyClass::doSomething() {
-    Vector3 vec3d1{1.0, 2.0, 3.0};
-    Vector3 vec3d2{5.0, 5.0, 6.0};
+    mymath::Vector3 vec3d1{1.0, 2.0, 3.0};
+    mymath::Vector3 vec3d2{5.0, 5.0, 6.0};
 
-    Vector3 vec3d3 = vec3d1 + vec3d2;
+    mymath::Vector3 vec3d3 = vec3d1 + vec3d2;
 
     bool areEqual = (vec3d1 == vec3d2);
     bool areNotEqual = (vec3d2 != vec3d3);
@@ -28,22 +28,22 @@ void MyClass::doSomething() {
 
     printf("Normalized Vector: (%f, %f, %f) with length %f\n\n", vec3d3.x, vec3d3.y, vec3d3.z, normal_vec3d3_length);
 
-    Vector2 vec2d1{3.0, 4.0};
+    mymath::Vector2 vec2d1{3.0, 4.0};
     double vec2d1_length = vec2d1.length();
     printf("Length of vec3d2d1: %f\n\n", vec2d1_length);
 
-    Vector2 vec2d2{6.0, 8.0};
-    Vector2 vec2d3 = vec2d1 + vec2d2;
-    printf("Resulting Vector2: (%f, %f)\n\n", vec2d3.x, vec2d3.y);
+    mymath::Vector2 vec2d2{6.0, 8.0};
+    mymath::Vector2 vec2d3 = vec2d1 + vec2d2;
+    printf("Resulting mymath::Vector2: (%f, %f)\n\n", vec2d3.x, vec2d3.y);
 
-    printf("Resulting Vector2 Length: %f\n\n", vec2d3.length());
+    printf("Resulting mymath::Vector2 Length: %f\n\n", vec2d3.length());
 
     vec2d3.normalize();
-    printf("Normalized Vector2: (%f, %f) with length %f\n\n", vec2d3.x, vec2d3.y, vec2d3.length());
+    printf("Normalized mymath::Vector2: (%f, %f) with length %f\n\n", vec2d3.x, vec2d3.y, vec2d3.length());
 }
 
 
-void MyClass::doGLFWStuff() {
+void MyClass::createWindow() {
     GLFWwindow* window;
 
     if (!glfwInit()) {

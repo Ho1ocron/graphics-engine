@@ -4,5 +4,5 @@
 class MyClass {
 public:
     void doSomething();
-    void doGLFWStuff();
+    void createWindow();
 };

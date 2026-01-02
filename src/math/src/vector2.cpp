@@ -1,6 +1,9 @@
 #include "vector2.h"
 #include <cmath>
 
+
+namespace mymath {
+
 bool Vector2::operator==(const Vector2& other) const {
     return x == other.x && y == other.y;
 }
@@ -68,4 +71,5 @@ void Vector2::normalize() {
         x /= len;
         y /= len;
     }
+}
 }

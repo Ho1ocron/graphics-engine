@@ -4,6 +4,6 @@
 int main() {
     MyClass obj;
     // obj.doSomething();
-    obj.doGLFWStuff();
+    obj.createWindow();
     return 0;
 }

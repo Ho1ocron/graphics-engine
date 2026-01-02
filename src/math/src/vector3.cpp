@@ -2,6 +2,8 @@
 #include "vector3.h"
 
 
+
+namespace mymath {
 bool Vector3::operator==(const Vector3& other) const {
     return x == other.x && y == other.y && z == other.z;
 }
@@ -75,3 +77,4 @@ void Vector3::normalize() {
         z /= len;
     }
 }
+} // namespace mymath
