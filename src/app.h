@@ -7,8 +7,8 @@ class MyClass {
 public:
     GLFWwindow* window;
     
-    int createWindow();
-    void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+    int create_window();
+    static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
     void run();
-    void doSomething();
+    void do_something();
 };

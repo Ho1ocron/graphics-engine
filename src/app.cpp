@@ -6,7 +6,7 @@
 #include "app.h"
 
 
-void MyClass::doSomething() {
+void MyClass::do_something() {
     mymath::Vector3 vec3d1{1.0, 2.0, 3.0};
     mymath::Vector3 vec3d2{5.0, 5.0, 6.0};
 
@@ -42,7 +42,7 @@ void MyClass::doSomething() {
 }
 
 
-int MyClass::createWindow() {
+int MyClass::create_window() {
     if (!glfwInit()) {
         printf("Failed to initialize GLFW\n");
         return -1;
@@ -61,12 +61,19 @@ int MyClass::createWindow() {
 }
 
 
+void MyClass::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    if (action == GLFW_PRESS)
+        printf("Key %d was pressed\n", key);
+}
+
+
 void MyClass::run() {
-    createWindow();
+    create_window();
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
         glfwSwapBuffers(window);
+        glfwSetKeyCallback(window, key_callback);
     }
     glfwTerminate();
 }
