@@ -17,3 +17,17 @@ add_executable(graphics-engine
 )
 
 target_link_libraries(graphics-engine PRIVATE math)
+
+
+include(CPack)
+
+set(CPACK_PACKAGE_NAME "graphics-engine")
+set(CPACK_PACKAGE_VERSION "1.0.0")
+
+if(WIN32)
+  set(CPACK_GENERATOR "ZIP")
+elseif(APPLE)
+  set(CPACK_GENERATOR "ZIP")
+else()
+  set(CPACK_GENERATOR "TGZ")
+endif()
