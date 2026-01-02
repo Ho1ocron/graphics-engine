@@ -2,9 +2,6 @@ name: C++ Build and Release
 
 on:
   push:
-    branches:
-      - main
-      - dev
     tags:
       - "v*"
 
