@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <GLFW/glfw3.h>
 
 #include <vector3.h>
 #include <vector2.h>
@@ -43,12 +42,10 @@ void MyClass::doSomething() {
 }
 
 
-void MyClass::createWindow() {
-    GLFWwindow* window;
-
+int MyClass::createWindow() {
     if (!glfwInit()) {
         printf("Failed to initialize GLFW\n");
-        return;
+        return -1;
     }
 
     window = glfwCreateWindow(640, 480, "My GLFW Window", 0, 0);
@@ -56,18 +53,20 @@ void MyClass::createWindow() {
     if (!window) {
         printf("Failed to create GLFW window\n");
         glfwTerminate();
-        return;
+        return -1;
     }
 
     glfwMakeContextCurrent(window);
+    return 0;
+}
 
-    while (true)
-    {
+
+void MyClass::run() {
+    createWindow();
+
+    while (true) {
         glfwPollEvents();
         glfwSwapBuffers(window);
     }
-    
     glfwTerminate();
-
-    return;
 }

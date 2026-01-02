@@ -1,6 +1,9 @@
 #pragma once
 
 namespace mymath {
+    /*
+    Creates a 2D vector with x and y components.
+    */
     class Vector2 {
     public:
         double x;
