@@ -2,10 +2,18 @@ cmake_minimum_required(VERSION 3.14)
 
 project(graphics-engine)
 
-add_executable(${PROJECT_NAME} 
-    src/main.cpp
-    src/app.cpp
-    src/vectors/vector3.cpp
-    src/vectors/vector2.cpp
+add_library(math STATIC
+    src/math/src/vector2.cpp
+    src/math/src/vector3.cpp
 )
 
+target_include_directories(math PUBLIC
+    ${PROJECT_SOURCE_DIR}/src/math/include
+)
+
+add_executable(graphics-engine
+    src/main.cpp
+    src/app.cpp
+)
+
+target_link_libraries(graphics-engine PRIVATE math)
