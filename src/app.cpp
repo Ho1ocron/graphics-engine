@@ -4,6 +4,8 @@
 
 #include <stdio.h>
 
+#include <GLFW/glfw3.h>
+
 
 void MyClass::doSomething() {
     Vector3 vec3d1{1.0, 2.0, 3.0};
@@ -38,4 +40,34 @@ void MyClass::doSomething() {
 
     vec2d3.normalize();
     printf("Normalized Vector2: (%f, %f) with length %f\n\n", vec2d3.x, vec2d3.y, vec2d3.length());
+}
+
+
+void MyClass::doGLFWStuff() {
+    GLFWwindow* window;
+
+    if (!glfwInit()) {
+        printf("Failed to initialize GLFW\n");
+        return;
+    }
+
+    window = glfwCreateWindow(640, 480, "My GLFW Window", 0, 0);
+
+    if (!window) {
+        printf("Failed to create GLFW window\n");
+        glfwTerminate();
+        return;
+    }
+
+    glfwMakeContextCurrent(window);
+
+    while (true)
+    {
+        glfwPollEvents();
+        glfwSwapBuffers(window);
+    }
+    
+    glfwTerminate();
+
+    return;
 }

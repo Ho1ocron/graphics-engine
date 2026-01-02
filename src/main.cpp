@@ -3,5 +3,7 @@
 
 int main() {
     MyClass obj;
-    obj.doSomething();
+    // obj.doSomething();
+    obj.doGLFWStuff();
+    return 0;
 }
