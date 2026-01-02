@@ -64,7 +64,7 @@ int MyClass::createWindow() {
 void MyClass::run() {
     createWindow();
 
-    while (true) {
+    while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
         glfwSwapBuffers(window);
     }
