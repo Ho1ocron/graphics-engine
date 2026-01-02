@@ -26,7 +26,7 @@ brew install cmake ninja
 The project contains GLFW as a git submodule. Clone and initialize submodules before building:
 
 ```bash
-git clone --recursive <repo-url> graphics-engine
+git clone --recursive https://github.com/Ho1ocron/graphics-engine.git
 cd graphics-engine
 # If you already cloned without --recursive:
 # git submodule update --init --recursive

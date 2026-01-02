@@ -9,7 +9,7 @@ Thanks for your interest in contributing! This document explains how to get the 
 - Clone the repository and initialize submodules:
 
 ```bash
-git clone --recursive <repo-url> graphics-engine
+git clone --recursive https://github.com/Ho1ocron/graphics-engine.
 cd graphics-engine
 # If you already cloned:
 # git submodule update --init --recursive
