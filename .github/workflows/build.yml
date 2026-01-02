@@ -1,0 +1,197 @@
+name: Build and release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag for the release (e.g., v1.0.0). Required if running manually.'
+        required: true
+
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      tag_name: ${{ steps.set_tag.outputs.tag_name }}
+    steps:
+      - name: Set tag name
+        id: set_tag
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            echo "tag_name=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          else
+            echo "tag_name=${{ github.event.inputs.tag }}" >> $GITHUB_OUTPUT
+          fi
+        shell: bash
+
+      - name: Create GitHub release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.set_tag.outputs.tag_name }}
+          release_name: ${{ steps.set_tag.outputs.tag_name }}
+          draft: false
+          prerelease: false
+
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            ext: tar.gz
+            content_type: application/gzip
+          - os: macos-latest
+            ext: tar.gz
+            content_type: application/gzip
+          - os: windows-latest
+            ext: zip
+            content_type: application/zip
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup CMake
+        uses: lukka/get-cmake@v3
+
+      - name: Install build tools (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: |
+          if [ "${{ runner.os }}" = "Linux" ]; then
+            sudo apt-get update && sudo apt-get install -y build-essential gnupg
+          else
+            brew install make gnupg
+          fi
+        shell: bash
+
+      - name: Install build tools (Windows)
+        if: runner.os == 'Windows'
+        run: choco install make gnupg -y
+        shell: powershell
+
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --config Release --parallel
+
+      - name: Package (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          mkdir -p dist
+          cp build/graphics-engine dist/ || cp build/Release/graphics-engine dist/ || true
+          tar -czf graphics-engine-${{ matrix.os }}-${{ needs.create_release.outputs.tag_name }}.${{ matrix.ext }} -C dist .
+        shell: bash
+
+      - name: Package (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          New-Item -ItemType Directory -Force -Path dist
+          Copy-Item -Path build\Release\graphics-engine.exe -Destination dist -ErrorAction SilentlyContinue
+          Copy-Item -Path build\graphics-engine.exe -Destination dist -ErrorAction SilentlyContinue
+          Compress-Archive -Path dist\* -DestinationPath graphics-engine-${{ matrix.os }}-${{ needs.create_release.outputs.tag_name }}.${{ matrix.ext }} -Force
+        shell: pwsh
+
+      - name: Compute checksum (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          FILE=graphics-engine-${{ matrix.os }}-${{ needs.create_release.outputs.tag_name }}.${{ matrix.ext }}
+          if command -v sha256sum >/dev/null 2>&1; then
+            sha256sum "$FILE" > "$FILE".sha256
+          else
+            shasum -a 256 "$FILE" > "$FILE".sha256
+          fi
+        shell: bash
+
+      - name: Compute checksum (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          $file = "graphics-engine-${{ matrix.os }}-${{ needs.create_release.outputs.tag_name }}.${{ matrix.ext }}"
+          $hash = Get-FileHash -Algorithm SHA256 $file
+          "${hash.Hash}  $file" | Out-File "$file.sha256" -Encoding ascii
+        shell: pwsh
+
+      - name: Import GPG key (Unix)
+        if: ${{ secrets.GPG_PRIVATE_KEY != '' }}
+        run: |
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+        shell: bash
+
+      - name: Import GPG key (Windows)
+        if: ${{ secrets.GPG_PRIVATE_KEY != '' }}
+        run: |
+          $env:GPG_PRIVATE_KEY | Out-File private.key -Encoding ascii
+          gpg --batch --import private.key
+        shell: pwsh
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+
+      - name: Sign artifacts (Unix)
+        if: ${{ secrets.GPG_PRIVATE_KEY != '' && secrets.GPG_PASSPHRASE != '' }}
+        run: |
+          FILE=graphics-engine-${{ matrix.os }}-${{ needs.create_release.outputs.tag_name }}.${{ matrix.ext }}
+          gpg --batch --yes --pinentry-mode loopback --passphrase "$GPG_PASSPHRASE" --output "$FILE".sig --detach-sign "$FILE"
+          gpg --batch --yes --pinentry-mode loopback --passphrase "$GPG_PASSPHRASE" --output "$FILE".sha256.sig --detach-sign "$FILE".sha256
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        shell: bash
+
+      - name: Sign artifacts (Windows)
+        if: ${{ secrets.GPG_PRIVATE_KEY != '' && secrets.GPG_PASSPHRASE != '' }}
+        run: |
+          $file = "graphics-engine-${{ matrix.os }}-${{ needs.create_release.outputs.tag_name }}.${{ matrix.ext }}"
+          gpg --batch --yes --pinentry-mode loopback --passphrase "$env:GPG_PASSPHRASE" --output "$file.sig" --detach-sign $file
+          gpg --batch --yes --pinentry-mode loopback --passphrase "$env:GPG_PASSPHRASE" --output "$file.sha256.sig" --detach-sign "$file.sha256"
+        shell: pwsh
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Upload release asset (binary)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: ./graphics-engine-${{ matrix.os }}-${{ needs.create_release.outputs.tag_name }}.${{ matrix.ext }}
+          asset_name: graphics-engine-${{ matrix.os }}-${{ needs.create_release.outputs.tag_name }}.${{ matrix.ext }}
+          asset_content_type: ${{ matrix.content_type }}
+
+      - name: Upload release asset (checksum)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: ./graphics-engine-${{ matrix.os }}-${{ needs.create_release.outputs.tag_name }}.${{ matrix.ext }}.sha256
+          asset_name: graphics-engine-${{ matrix.os }}-${{ needs.create_release.outputs.tag_name }}.${{ matrix.ext }}.sha256
+          asset_content_type: text/plain
+
+      - name: Upload release asset (signature)
+        if: ${{ secrets.GPG_PRIVATE_KEY != '' && secrets.GPG_PASSPHRASE != '' }}
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: ./graphics-engine-${{ matrix.os }}-${{ needs.create_release.outputs.tag_name }}.${{ matrix.ext }}.sig
+          asset_name: graphics-engine-${{ matrix.os }}-${{ needs.create_release.outputs.tag_name }}.${{ matrix.ext }}.sig
+          asset_content_type: application/pgp-signature
+
+      - name: Upload release asset (checksum signature)
+        if: ${{ secrets.GPG_PRIVATE_KEY != '' && secrets.GPG_PASSPHRASE != '' }}
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: ./graphics-engine-${{ matrix.os }}-${{ needs.create_release.outputs.tag_name }}.${{ matrix.ext }}.sha256.sig
+          asset_name: graphics-engine-${{ matrix.os }}-${{ needs.create_release.outputs.tag_name }}.${{ matrix.ext }}.sha256.sig
+          asset_content_type: application/pgp-signature
