@@ -4,24 +4,12 @@
 #include <map>
 
 #include <GLFW/glfw3.h>
-// #include <glm/glm.hpp>
-#include <ft2build.h>
-#include FT_FREETYPE_H
-
-
-// struct Character {
-//     unsigned int TextureID;
-//     glm::ivec2   Size;
-//     glm::ivec2   Bearing;
-//     unsigned int Advance;
-// };
+#include <glm/glm.hpp>
 
 
 class MyClass {
 public:
     GLFWwindow* window;
-
-    // std::map<char, Character> Characters;
     
     int create_window();
     static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);

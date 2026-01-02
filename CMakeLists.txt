@@ -1,6 +1,15 @@
 cmake_minimum_required(VERSION 3.14)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 project(graphics-engine)
+
+file(COPY
+    ${PROJECT_SOURCE_DIR}/assets/fonts/JetBrainsMono-Italic.ttf
+    DESTINATION ${CMAKE_BINARY_DIR}
+)
 
 add_subdirectory(glfw/)
 add_subdirectory(freetype/)
