@@ -1,0 +1,31 @@
+name: C++ Build and Release
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+    - uses: actions/checkout@v4 # Check out the source code
+
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config Release
+
+    - name: Create Package (optional, using CPack with CMake)
+      run: cmake --build ${{github.workspace}}/build --target package
+      # This step uses CPack to create a distributable archive (e.g., .tar.gz, .zip)
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.os }}-release-build
+        path: ${{github.workspace}}/build/*.zip # Adjust the path/extension based on CPack output
