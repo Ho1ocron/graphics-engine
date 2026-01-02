@@ -2,27 +2,38 @@ name: C++ Build and Release
 
 on:
   push:
-    branches: [ main ]
+    tags:
+      - "v*"
 
 jobs:
   build:
     runs-on: ${{ matrix.os }}
+
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
-    - uses: actions/checkout@v4 # Check out the source code
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
     - name: Configure CMake
-      run: cmake -S . -B build
+      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 
-    - name: Create Package (optional, using CPack with CMake)
-      run: cmake --build build
-      # This step uses CPack to create a distributable archive (e.g., .tar.gz, .zip)
+    - name: Build
+      run: cmake --build build --config Release
 
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v4
+    - name: Package with CPack
+      run: |
+        cd build
+        cpack
+
+    - name: Upload artifacts to GitHub Release
+      uses: softprops/action-gh-release@v1
       with:
-        name: ${{ matrix.os }}-release-build
-        path: ${{github.workspace}}/build/*.zip # Adjust the path/extension based on CPack output
+        files: |
+          build/*.zip
+          build/*.tar.gz
+          build/*.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
