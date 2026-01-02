@@ -1,0 +1,27 @@
+FROM ubuntu:22.04
+
+# Install build tools
+RUN apt-get update && apt-get install -y \
+    cmake \
+    g++ \
+    ninja-build \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /build
+
+# Copy source
+COPY . .
+
+# Build & install
+RUN cmake -S . -B build -DCMAKE_BUILD_TYPE=Release \
+ && cmake --build build \
+ && cmake --install build --prefix /opt/math
+
+# Final image (runtime only)
+FROM ubuntu:22.04
+
+COPY --from=0 /opt/math /opt/math
+
+ENV CMAKE_PREFIX_PATH=/opt/math
+
+# This image is a *package*, not an app
