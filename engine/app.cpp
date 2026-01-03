@@ -89,8 +89,8 @@ void MyApp::framebuffer_size_callback(GLFWwindow* window, int width, int height)
     MyApp* app = static_cast<MyApp*>(glfwGetWindowUserPointer(window));
     if (!app) return;
 
-    for (Text& t : app->texts) {
-        t.setScreenSize(width, height);
+    for (Text& text : app->texts) {
+        text.setScreenSize(width, height);
     }
 }
 
