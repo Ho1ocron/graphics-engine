@@ -48,16 +48,26 @@ void MyApp::setup() {
 }
 
 
-void MyApp::create_text(const char* text, const char* font_path, glm::vec3 position, float font_size, float scale, glm::vec3 color) {
-    Text new_text(text, font_path, position, font_size, scale, SCR_WIDTH, SCR_HEIGHT,color);
-    texts.push_back(new_text);
+Text& MyApp::create_text(const char* text, const char* font_path, glm::vec3 position, float font_size, float scale, glm::vec3 color) {
+    texts.emplace_back(std::make_unique<Text>(text, font_path, position, font_size, scale, SCR_WIDTH, SCR_HEIGHT, color));
+    return *texts.back();
 }
 
 
 void MyApp::render_text() {
-    for (Text& text : texts) {
-        text.render();
+    for (auto& text_ptr : texts) {
+        if (text_ptr) text_ptr->render();
     }
+}
+
+
+void MyApp::modify_text(
+    Text& text, const char* new_text, const char* new_font_path, 
+    std::optional<glm::vec3> position,
+    std::optional<float> font_size, std::optional<float> scale, 
+    std::optional<glm::vec3> color
+) {
+    text.setText(new_text ? std::string(new_text) : text.getText());
 }
 
 
@@ -67,10 +77,13 @@ void MyApp::init() {
 }
 
 
-void MyApp::run() {
+void MyApp::run(const std::function<void()>& on_update) {
     if (!window) init();
 
     while (!glfwWindowShouldClose(window)) {
+        // user hook for per-frame updates (safe to call GL-dependent code)
+        if (on_update) on_update();
+
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -89,8 +102,8 @@ void MyApp::framebuffer_size_callback(GLFWwindow* window, int width, int height)
     MyApp* app = static_cast<MyApp*>(glfwGetWindowUserPointer(window));
     if (!app) return;
 
-    for (Text& text : app->texts) {
-        text.setScreenSize(width, height);
+    for (auto& text_ptr : app->texts) {
+        if (text_ptr) text_ptr->setScreenSize(width, height);
     }
 }
 

@@ -5,6 +5,8 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <optional>
+#include <functional>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -30,7 +32,7 @@ private:
 
     unsigned int VAO, VBO;
 
-    std::vector<Text> texts;
+    std::vector<std::unique_ptr<Text>> texts;
 
     GLFWwindow* window = nullptr;
 
@@ -46,8 +48,14 @@ private:
 public:
     GLFWwindow* get_window() { return window; }
     void init();
-    void create_text(const char* text, const char* font_path, glm::vec3 position, float font_size, float scale, glm::vec3 color);
-    void run();
+    Text& create_text(const char* text, const char* font_path, glm::vec3 position, float font_size, float scale, glm::vec3 color);
+    void modify_text(
+        Text& text, const char* new_text, const char* new_font_path, 
+        std::optional<glm::vec3> position,
+        std::optional<float> font_size, std::optional<float> scale, 
+        std::optional<glm::vec3> color
+    );
+    void run(const std::function<void()>& on_update = {});
 
     MyApp(const char* app_title, const unsigned int& width, const unsigned int& height) : title(app_title), SCR_WIDTH(width), SCR_HEIGHT(height) {}
 };
