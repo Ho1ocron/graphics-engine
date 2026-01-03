@@ -33,7 +33,7 @@ int main() {
         glm::vec3{1.0f, 1.0f, 1.0f}
     );
 
-    app.create_text(
+    Text& text2 = app.create_text(
         "Bold font text",
         bold_font.c_str(),
         glm::vec3{25.0f, 460.0f, 0.0f},
@@ -42,8 +42,9 @@ int main() {
         glm::vec3{0.8f, 0.3f, 0.2f}
     );
 
-
-    app.run([&]() {update_text(text1); });
+    app.run([&]() {
+        update_text(text1);
+    });
 
     return 0;
 }
