@@ -91,7 +91,7 @@ int main()
 
 	// find path to font
     // std::string font_name = FileSystem::getPath("resources/fonts/Antonio-Bold.ttf");
-    std::string font_name = "JetBrainsMono-Italic.ttf";
+    std::string font_name = FONT_DIR "JetBrainsMono-Italic.ttf";
     if (font_name.empty())
     {
         std::cout << "ERROR::FREETYPE: Failed to load font_name" << std::endl;
