@@ -22,9 +22,6 @@ void processInput(GLFWwindow* window);
 
 int main()
 {
-    // =========================
-    // GLFW
-    // =========================
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -51,24 +48,15 @@ int main()
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    // =========================
-    // GLAD
-    // =========================
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         printf(INIT_GLAD_ERROR_MSG);
         return -1;
     }
 
-    // =========================
-    // OpenGL state
-    // =========================
     glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    // =========================
-    // Text objects
-    // =========================
     const char* regular_font = FONT_DIR REGULAR_FONT;
     const char* bold_font    = FONT_DIR BOLD_FONT;
     Text regularText(
@@ -91,17 +79,9 @@ int main()
         glm::vec3{0.8f, 0.3f, 0.2f}
     );
 
- 
-    // in framebuffer_size_callback:
-   
-
-    // =========================
-    // Render loop
-    // =========================
     glfwSwapInterval(0);
 
-    while (!glfwWindowShouldClose(window))
-    {
+    while (!glfwWindowShouldClose(window)) {
         processInput(window);
 
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -118,20 +98,14 @@ int main()
     return 0;
 }
 
-// =========================
-// Input
-// =========================
-void processInput(GLFWwindow* window)
-{
+
+void processInput(GLFWwindow* window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 }
 
-// =========================
-// Resize callback
-// =========================
-void framebuffer_size_callback(GLFWwindow*, int width, int height)
-{   
+
+void framebuffer_size_callback(GLFWwindow*, int width, int height) {   
     glViewport(0, 0, width, height);
     if (g_regularText) g_regularText->setScreenSize(width, height);
     if (g_boldText)    g_boldText->setScreenSize(width, height);
