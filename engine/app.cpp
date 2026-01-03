@@ -81,7 +81,6 @@ void MyApp::run(const std::function<void()>& on_update) {
     if (!window) init();
 
     while (!glfwWindowShouldClose(window)) {
-        // user hook for per-frame updates (safe to call GL-dependent code)
         if (on_update) on_update();
 
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
