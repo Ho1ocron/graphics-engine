@@ -19,7 +19,7 @@
 #include FT_FREETYPE_H
 
 #include "text.h"
-#include "shader.h"
+#include "character_body.h"
 #include "constants.h"
 
 
