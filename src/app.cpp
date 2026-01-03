@@ -1,12 +1,10 @@
 #include <stdio.h>
-
-#include <vector3.h>
-#include <vector2.h>
+#include <iostream>
 
 #include "app.h"
 
 
-void MyClass::do_something() {
+void MyApp::do_something() {
     mymath::Vector3 vec3d1{1.0, 2.0, 3.0};
     mymath::Vector3 vec3d2{5.0, 5.0, 6.0};
 
@@ -42,7 +40,7 @@ void MyClass::do_something() {
 }
 
 
-int MyClass::create_window() {
+int MyApp::create_window() {
     if (!glfwInit()) {
         printf("Failed to initialize GLFW\n");
         return -1;
@@ -61,18 +59,109 @@ int MyClass::create_window() {
 }
 
 
-void MyClass::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+void MyApp::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS)
         printf("Key %d was pressed\n", key);
 }
 
 
-void MyClass::run() {
+// void MyApp::load_font(const char* font_path) {FT_Library library;
+//     // 1. Initialize the FreeType library
+//     error = FT_Init_FreeType(&library);
+//     if (error) {
+//         std::cerr << "ERROR: Could not init FreeType library (Error code: " << error << ")" << std::endl;
+//     }
+//     // Check error codes for all FreeType functions
+
+//     // 2. Load a font face from a file
+//     // Replace "arial.ttf" with the path to your font file.
+//     // The second argument (0) is the index of the font face in the file (most files have only one).
+//     error = FT_New_Face(library, font_path, 0, &face);
+//     if (error == FT_Err_Unknown_File_Format) {
+//         std::cerr << "ERROR: Font format unsupported" << std::endl;
+//     } else if (error) {
+//         std::cerr << "ERROR: Could not open font file (Error code: " << error << ")" << std::endl;
+//     }
+
+//     // 3. Set the font size
+//     // The size is specified in 1/64ths of a pixel, so 16*64 is 16 pixels.
+//     // The 0s for the character width and height parameters indicate the size
+//     // will be set relative to the pixel height.
+//     error = FT_Set_Pixel_Sizes(face, 0, 16); // Set a font height of 16 pixels
+//     if (error) {
+//          std::cerr << "ERROR: Could not set pixel size (Error code: " << error << ")" << std::endl;
+//     }
+    
+//     std::cout << "Font loaded successfully!" << std::endl;
+
+//     error = FT_Load_Char(face, 'A', FT_LOAD_RENDER);
+//     if (error) {
+//         std::cerr << "ERROR: Could not load character 'A' (Error code: " << error << ")" << std::endl;
+//     }
+// }
+
+
+struct Character {
+    unsigned int TextureID; // ID handle of the glyph texture
+    glm::ivec2   Size;      // Size of glyph
+    glm::ivec2   Bearing;   // Offset from baseline to left/top of glyph
+    unsigned int Advance;   // Offset to advance to next glyph
+};
+
+
+// void MyApp::render_font() {
+//     std::map<char, Character> Characters;
+//     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+//     for (unsigned char c = 0; c < 128; c++) {
+//         // Load character glyph 
+//         if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
+//             std::cerr << "ERROR: Failed to load Glyph for character " << c << std::endl;
+//             continue;
+//         }
+
+//         unsigned int texture;
+//         glGenTextures(1, &texture);
+//         glBindTexture(GL_TEXTURE_2D, texture);
+//         glTexImage2D(
+//             GL_TEXTURE_2D,
+//             0,
+//             GL_RED,
+//             face->glyph->bitmap.width,
+//             face->glyph->bitmap.rows,
+//             0,
+//             GL_RED,
+//             GL_UNSIGNED_BYTE,
+//             face->glyph->bitmap.buffer
+//         );
+//         // set texture options
+//         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+//         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+//         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//         // now store character for later use
+//         Character character = {
+//             texture, 
+//             glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+//             glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+//             face->glyph->advance.x
+//         };
+//         Characters.insert(std::pair<char, Character>(c, character));
+//     }
+//     glPixelStorei(GL_UNPACK_ALIGNMENT, 1); 
+//     FT_Done_Face(face);
+//     FT_Done_FreeType(library);
+// }
+
+
+void MyApp::run() {
     create_window();
+    // load_font("JetBrainsMono-Italic.ttf");
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
         glfwSwapBuffers(window);
+        // render_font();
         glfwSetKeyCallback(window, key_callback);
     }
     glfwTerminate();

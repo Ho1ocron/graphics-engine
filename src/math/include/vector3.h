@@ -4,7 +4,8 @@ namespace mymath {
     /*
     Creates a 3D vector with x, y, and z components.
     */
-    class Vector3 {
+    struct Vector3
+    {
     public:
         double x;
         double y;
