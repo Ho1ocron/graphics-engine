@@ -55,7 +55,7 @@ Text& MyApp::create_text(const char* text, const char* font_path, glm::vec3 posi
 
 
 void MyApp::render_text() {
-    for (auto& text_ptr : texts) {
+    for (const auto& text_ptr : texts) {
         if (text_ptr) text_ptr->render();
     }
 }
@@ -77,6 +77,25 @@ void MyApp::init() {
 }
 
 
+void MyApp::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+    glViewport(0, 0, width, height);
+    MyApp* app = static_cast<MyApp*>(glfwGetWindowUserPointer(window));
+    if (!app) return;
+
+    for (auto& text_ptr : app->texts) {
+        if (text_ptr) text_ptr->setScreenSize(width, height);
+    }
+}
+
+
+void MyApp::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+    else if (action == GLFW_PRESS || action == GLFW_REPEAT) 
+        printf("Key %d pressed\n", key);
+}
+
+
 void MyApp::run(const std::function<void()>& on_update) {
     if (!window) init();
 
@@ -93,22 +112,4 @@ void MyApp::run(const std::function<void()>& on_update) {
     }
 
     glfwTerminate();
-}
-
-
-void MyApp::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-    glViewport(0, 0, width, height);
-    MyApp* app = static_cast<MyApp*>(glfwGetWindowUserPointer(window));
-    if (!app) return;
-
-    for (auto& text_ptr : app->texts) {
-        if (text_ptr) text_ptr->setScreenSize(width, height);
-    }
-}
-
-
-void MyApp::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-        glfwSetWindowShouldClose(window, true);
-    }
 }

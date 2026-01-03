@@ -43,7 +43,6 @@ private:
     static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
     void render_text();
-    void processInput(GLFWwindow *window);
     
 public:
     GLFWwindow* get_window() { return window; }

@@ -42,6 +42,8 @@ int main() {
         glm::vec3{0.8f, 0.3f, 0.2f}
     );
 
+    text2.setText("Modified bold text!");
+
     app.run([&]() {
         update_text(text1);
     });
