@@ -2,12 +2,26 @@
 #include <cmath>
 
 
+void update_text(Text& text) {
+    float time = static_cast<float>(glfwGetTime());
+    glm::vec3 pos = text.getPosition();
+    pos.x = 100.0f + 60.0f * sinf(time);
+    pos.y = 100.0f + 20.0f * sinf(time * 2.0f);
+    text.setPosition(pos);
+    text.setColor(glm::vec3{ (sinf(time) + 1.0f) / 2.0f, (cosf(time) + 1.0f) / 2.0f, 0.5f });
+
+     // toggle text every second
+    if (static_cast<int>(time)) 
+        text.setText("Seconds: "+std::to_string(static_cast<int>(time)));
+}
+
+
 int main() {
     MyApp app("Text Rendering", 800, 600);
 
     std::string regular_font = FONT_DIR REGULAR_FONT;
     std::string bold_font    = FONT_DIR BOLD_FONT;
-    
+
     app.init();
 
     Text& text1 = app.create_text(
@@ -29,22 +43,7 @@ int main() {
     );
 
 
-    app.run([&]() {
-        float t = static_cast<float>(glfwGetTime());
-
-        glm::vec3 pos = text1.getPosition();
-        pos.x = 100.0f + 60.0f * sinf(t);
-        pos.y = 100.0f + 20.0f * sinf(t * 2.0f);
-        text1.setPosition(pos);
-        text1.setColor(glm::vec3{ (sinf(t) + 1.0f) / 2.0f, (cosf(t) + 1.0f) / 2.0f, 0.5f });
-
-        // toggle text every second
-        if (static_cast<int>(t) % 2 == 0) {
-            text1.setText("Even second");
-        } else {
-            text1.setText("Odd second");
-        }
-    });
+    app.run([&]() {update_text(text1); });
 
     return 0;
 }
