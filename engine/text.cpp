@@ -3,19 +3,20 @@
 
 Text::Text(
     const char* text, const char* fontPath,
-    glm::vec3 position,float scale,
+    glm::vec3 position, float fontSize, float scale,
     const unsigned int& screen_width,
     const unsigned int& screen_height,
     glm::vec3 color
 ) : content(text),
     position(position),
+    fontSize(fontSize),
     scale(scale),
     screen_height(screen_height),
     screen_width(screen_width),
     color(color),
     shader(SHADER_DIR "text.vs", SHADER_DIR "text.fs")
 {
-    loadFont(fontPath);
+    loadFont(fontPath, fontSize);
     setupBuffers();
 
     glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(screen_width), 0.0f, static_cast<float>(screen_height));
@@ -24,7 +25,7 @@ Text::Text(
 }
 
 
-void Text::loadFont(const std::string& path, unsigned int size) {
+void Text::loadFont(const std::string& path, float& size) {
     FT_Library ft;
     FT_Init_FreeType(&ft);
 

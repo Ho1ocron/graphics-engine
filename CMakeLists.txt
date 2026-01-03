@@ -36,10 +36,12 @@ target_include_directories(glad PUBLIC
 # target_include_directories(shaders PUBLIC 
 #     ${PROJECT_SOURCE_DIR}/src/shaders/include
 # )
-
+add_custom_target(copy_assets
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/assets ${CMAKE_CURRENT_BINARY_DIR}/assets
+)
 add_executable(graphics-engine
     engine/main.cpp
-    # engine/app.cpp
+    engine/app.cpp
     engine/text.cpp
 )
 add_dependencies(graphics-engine copy_assets)
@@ -47,13 +49,6 @@ target_compile_definitions(graphics-engine PRIVATE
     SHADER_DIR="assets/shaders/"
     FONT_DIR="assets/fonts/"
 )
-
-add_custom_target(copy_assets
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/assets ${CMAKE_CURRENT_BINARY_DIR}/assets
-)
-
-
-
 
 target_include_directories(${PROJECT_NAME} PRIVATE glfw freetype glm)
 # target_link_libraries(${PROJECT_NAME} PUBLIC glfw)

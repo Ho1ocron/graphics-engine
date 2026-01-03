@@ -32,7 +32,7 @@ struct Text
 public:
     Text(
         const char* text, const char* fontPath,
-        glm::vec3 position, float scale, 
+        glm::vec3 position, float fontSize, float scale, 
         const unsigned int& screen_width,
         const unsigned int& screen_height,
         glm::vec3 color
@@ -42,13 +42,14 @@ public:
     void setScreenSize(const unsigned int& width, const unsigned int& height);
 
 private:
-    void loadFont(const std::string& path, unsigned int size = 24);
+    void loadFont(const std::string& path, float& size);
     void setupBuffers();
 
     const unsigned int screen_width;
     const unsigned int screen_height;
     std::string content;
     glm::vec2 position;
+    float fontSize;
     float scale;
     glm::vec3 color;
 

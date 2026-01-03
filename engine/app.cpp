@@ -1,121 +1,102 @@
-// #include "app.h"
-// #include "constants.h"
+#include "app.h"
 
 
-// void MyApp::create_window() {
-//     glfwInit();
-
-// #ifdef __APPLE__
-//     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-// #endif
-
-//     GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, title, nullptr, nullptr);
-//     if (!window) {
-//         printf(LOAD_WINDOW_ERROR_MSG);
-//         glfwTerminate();
-//         return;
-//     }
-// }
+void MyApp::create_window() {
+ 
+}
 
 
-// void MyApp::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-//     // make sure the viewport matches the new window dimensions; note that width and 
-//     // height will be significantly larger than specified on retina displays.
-//     glViewport(0, 0, width, height);
-// }
+void MyApp::setup() {
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+#ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
+
+    window = glfwCreateWindow(
+        SCR_WIDTH,
+        SCR_HEIGHT,
+        "Text Rendering (OOP)",
+        nullptr,
+        nullptr
+    );
+
+    if (!window) {
+        printf(LOAD_WINDOW_ERROR_MSG);
+        glfwTerminate();
+        return;
+    }
+
+    // store this instance so static callbacks can access it
+    glfwSetWindowUserPointer(window, this);
+
+    glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetKeyCallback(window, key_callback);
+
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        printf(INIT_GLAD_ERROR_MSG);
+        return;
+    }
+
+    glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
 
 
-// int MyApp::run() {
-//     create_window();
-//     glfwMakeContextCurrent(window);
-//     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+void MyApp::create_text(const char* text, const char* font_path, glm::vec3 position, float font_size, float scale, glm::vec3 color) {
+    Text new_text(text, font_path, position, font_size, scale, SCR_WIDTH, SCR_HEIGHT,color);
+    texts.push_back(new_text);
+}
 
-//     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-//         printf(INIT_GLAD_ERROR_MSG);
-//         return -1;
-//     }
 
-//     // OpenGL state
-//     glEnable(GL_BLEND);
-//     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+void MyApp::render_text() {
+    for (Text& text : texts) {
+        text.render();
+    }
+}
 
-//     // Shader
-//     Shader shader(SHADER_DIR "text.vs", SHADER_DIR "text.fs");
-//     glm::mat4 projection = glm::ortho(
-//         0.0f,
-//         static_cast<float>(SCR_WIDTH),
-//         0.0f,
-//         static_cast<float>(SCR_HEIGHT)
-//     );
 
-//     shader.use();
-//     glUniformMatrix4fv(
-//         glGetUniformLocation(shader.ID, "projection"),
-//         1,
-//         GL_FALSE,
-//         glm::value_ptr(projection)
-//     );
+void MyApp::init() {
+    create_window();
+    setup();
+}
 
-//     // =========================
-//     // Load fonts
-//     // =========================
-//     const std::string regular_font_path = FONT_DIR REGULAR_FONT;
-//     const std::string italic_font_path  = FONT_DIR ITALIC_FONT;
-//     const std::string bold_font_path    = FONT_DIR BOLD_FONT;
 
-//     Font regularFont = LoadFont(regular_font_path, 24);
-//     Font italicFont  = LoadFont(italic_font_path, 24);
-//     Font boldFont    = LoadFont(bold_font_path, 24);
+void MyApp::run() {
+    if (!window) init();
 
-//     // =========================
-//     // VAO / VBO
-//     // =========================
-//     glGenVertexArrays(1, &VAO);
-//     glGenBuffers(1, &VBO);
+    while (!glfwWindowShouldClose(window)) {
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
 
-//     glBindVertexArray(VAO);
-//     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-//     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, nullptr, GL_DYNAMIC_DRAW);
+        render_text();
 
-//     glEnableVertexAttribArray(0);
-//     glVertexAttribPointer(
-//         0,
-//         4,
-//         GL_FLOAT,
-//         GL_FALSE,
-//         4 * sizeof(float),
-//         (void*)0
-//     );
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
 
-//     glBindBuffer(GL_ARRAY_BUFFER, 0);
-//     glBindVertexArray(0);
+    glfwTerminate();
+}
 
-//     // =========================
-//     // Render loop
-//     // =========================
-//     glfwSwapInterval(0);
-//     while (!glfwWindowShouldClose(window)) {
-//         processInput(window);
 
-//         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-//         glClear(GL_COLOR_BUFFER_BIT);
+void MyApp::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+    glViewport(0, 0, width, height);
+    MyApp* app = static_cast<MyApp*>(glfwGetWindowUserPointer(window));
+    if (!app) return;
 
-//         RenderText(
-//             shader, regularFont, "Regular font text",
-//             25.0f, 500.0f, 1.0f,
-//             glm::vec3(0.9f, 0.9f, 0.9f)
-//         );
+    for (Text& t : app->texts) {
+        t.setScreenSize(width, height);
+    }
+}
 
-//         RenderText(
-//             shader, boldFont, "Bold font text", 
-//             25.0f, 460.0f, 1.0f, 
-//             glm::vec3(0.7f, 0.8f, 1.0f)
-//         );
-//         glfwSwapBuffers(window);
-//         glfwPollEvents();
-//     }
-    
 
-//     glfwTerminate();
-//     return 0;
-// }
+void MyApp::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+        glfwSetWindowShouldClose(window, true);
+    }
+}
