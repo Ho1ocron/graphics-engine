@@ -1,18 +1,22 @@
 #pragma once
 
-#include <string>
+#include <iostream>
+#include <stdio.h>
 #include <map>
+#include <string>
 
-#include <vector3.h>
-#include <vector2.h>
-
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
 #include "shader.h"
+#include "constants.h"
 
 
 // class MyApp 
@@ -48,6 +52,7 @@ struct Font {
 class MyApp 
 {
 private:
+    const char* title;
     const unsigned int SCR_WIDTH = 800;
     const unsigned int SCR_HEIGHT = 600;
 
@@ -56,10 +61,15 @@ private:
     GLFWwindow* window;
     
 public:
-    int create_window();
+    void create_window(); 
     Font LoadFont(const std::string& path, unsigned int fontSize);
-    void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+
+    static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+
     void processInput(GLFWwindow *window);
     void RenderText(Shader &shader, const Font& font, std::string text, float x, float y, float scale, glm::vec3 color);
-    void run();
+
+    int run();
+
+    MyApp(const char* app_title, const unsigned int& width, const unsigned int& height) : title(app_title), SCR_WIDTH(width), SCR_HEIGHT(height) {}
 };
