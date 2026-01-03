@@ -128,6 +128,7 @@ int main()
     // =========================
     // Render loop
     // =========================
+    glfwSwapInterval(0);
     while (!glfwWindowShouldClose(window))
     {
         processInput(window);
@@ -146,10 +147,10 @@ int main()
             25.0f, 460.0f, 1.0f, 
             glm::vec3(0.7f, 0.8f, 1.0f)
         );
-
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+    
 
     glfwTerminate();
     return 0;

@@ -40,21 +40,26 @@ struct Character {
 };
 
 
+struct Font {
+    std::map<GLchar, Character> characters;
+};
+
+
 class MyApp 
 {
 private:
     const unsigned int SCR_WIDTH = 800;
     const unsigned int SCR_HEIGHT = 600;
 
-    std::map<GLchar, Character> Characters;
     unsigned int VAO, VBO;
 
     GLFWwindow* window;
     
 public:
+    int create_window();
+    Font LoadFont(const std::string& path, unsigned int fontSize);
     void framebuffer_size_callback(GLFWwindow* window, int width, int height);
     void processInput(GLFWwindow *window);
-    void RenderText(Shader &shader, std::string text, float x, float y, float scale, glm::vec3 color);
-    void create_window(const char* title, const int& width, const int& height, const char* color, const char* font_path);
+    void RenderText(Shader &shader, const Font& font, std::string text, float x, float y, float scale, glm::vec3 color);
     void run();
 };

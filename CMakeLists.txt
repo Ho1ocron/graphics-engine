@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.14)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(graphics-engine)
 
@@ -42,11 +43,17 @@ add_executable(graphics-engine
 )
 
 target_compile_definitions(graphics-engine PRIVATE
-    SHADER_DIR="${PROJECT_SOURCE_DIR}/assets/shaders/"
-    FONT_DIR="${PROJECT_SOURCE_DIR}/assets/fonts/"
+    SHADER_DIR="assets/shaders/"
+    FONT_DIR="assets/fonts/"
 )
+
+add_custom_target(copy_assets
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/assets ${CMAKE_CURRENT_BINARY_DIR}/assets
+)
+
+
+
 
 target_include_directories(${PROJECT_NAME} PRIVATE glfw freetype glm)
 # target_link_libraries(${PROJECT_NAME} PUBLIC glfw)
-target_link_libraries(graphics-engine PRIVATE math glfw glad freetype glm "-framework OpenGL")
-
+target_link_libraries(graphics-engine PRIVATE math glfw glad freetype glm "-framework OpenGL") 
