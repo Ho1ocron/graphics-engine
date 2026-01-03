@@ -45,8 +45,8 @@ private:
     void loadFont(const std::string& path, unsigned int size = 24);
     void setupBuffers();
 
-    const unsigned short int screen_width;
-    const unsigned short int screen_height;
+    const unsigned int screen_width;
+    const unsigned int screen_height;
     std::string content;
     glm::vec2 position;
     float scale;
