@@ -95,7 +95,7 @@ void MyApp::key_callback(GLFWwindow* window, int key, int scancode, int action, 
         printf("Key %d pressed\n", key);
         MyApp* app = static_cast<MyApp*>(glfwGetWindowUserPointer(window));
         if (!app) return;
-            const auto& text = app->texts.empty() ? nullptr : app->texts[1].get();
+            Text* text = app->texts.empty() ? nullptr : app->texts[1].get();
         if (text) {
             text->setText("Key "+std::to_string(key)+" pressed");
         }
