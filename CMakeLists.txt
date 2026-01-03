@@ -25,7 +25,7 @@ add_library(glad STATIC
 )
 
 target_include_directories(math PUBLIC
-    ${PROJECT_SOURCE_DIR}/src/math/include
+    ${PROJECT_SOURCE_DIR}/engine/math/include
 )
 
 target_include_directories(glad PUBLIC
