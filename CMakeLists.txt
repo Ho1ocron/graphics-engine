@@ -38,7 +38,7 @@ target_include_directories(glad PUBLIC
 
 add_executable(graphics-engine
     src/main.cpp
-    src/app.cpp
+    # src/app.cpp
 )
 
 target_compile_definitions(graphics-engine PRIVATE

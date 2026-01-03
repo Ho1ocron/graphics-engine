@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdio.h>
 #include <map>
 #include <string>
 
@@ -13,6 +14,8 @@
 #include FT_FREETYPE_H
 
 #include "shader.h"
+#include "constants.h"
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -48,10 +51,10 @@ int main()
 
     // glfw window creation
     // --------------------
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "GLFW app", NULL, NULL);
     if (window == NULL)
     {
-        std::cout << "Failed to create GLFW window" << std::endl;
+        printf(LOAD_WINDOW_ERROR_MSG);
         glfwTerminate();
         return -1;
     }
@@ -62,7 +65,7 @@ int main()
     // ---------------------------------------
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
-        std::cout << "Failed to initialize GLAD" << std::endl;
+        printf(INIT_GLAD_ERROR_MSG);
         return -1;
     }
     
@@ -85,28 +88,30 @@ int main()
     // All functions return a value different than 0 whenever an error occurred
     if (FT_Init_FreeType(&ft))
     {
-        std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+        printf(INIT_FREETYPE_ERROR_MSG);
         return -1;
     }
 
 	// find path to font
     // std::string font_name = FileSystem::getPath("resources/fonts/Antonio-Bold.ttf");
-    std::string font_name = FONT_DIR "JetBrainsMono-Italic.ttf";
-    if (font_name.empty())
-    {
-        std::cout << "ERROR::FREETYPE: Failed to load font_name" << std::endl;
+    std::string font_name = FONT_DIR REGULAR_FONT;
+    std::string italic_font_name = FONT_DIR ITALIC_FONT;
+    if (font_name.empty() || italic_font_name.empty()) {
+        printf(LOAD_FONT_NAME_ERROR_MSG);
         return -1;
     }
 	
 	// load font as face
     FT_Face face;
-    if (FT_New_Face(ft, font_name.c_str(), 0, &face)) {
-        std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+    FT_Face italic_face;
+    if (FT_New_Face(ft, font_name.c_str(), 0, &face) || FT_New_Face(ft, italic_font_name.c_str(), 0, &italic_face)) {
+        printf(LOAD_FONT_ERROR_MSG);
         return -1;
     }
     else {
         // set size to load glyphs as
-        FT_Set_Pixel_Sizes(face, 0, 48);
+        FT_Set_Pixel_Sizes(face, 0, 24);
+        FT_Set_Pixel_Sizes(italic_face, 0, 24);
 
         // disable byte-alignment restriction
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -115,9 +120,9 @@ int main()
         for (unsigned char c = 0; c < 128; c++)
         {
             // Load character glyph 
-            if (FT_Load_Char(face, c, FT_LOAD_RENDER))
+            if (FT_Load_Char(face, c, FT_LOAD_RENDER) || FT_Load_Char(italic_face, c, FT_LOAD_RENDER))
             {
-                std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+                printf(LOAD_GLYPH_ERROR_MSG);
                 continue;
             }
             // generate texture
@@ -135,6 +140,17 @@ int main()
                 GL_UNSIGNED_BYTE,
                 face->glyph->bitmap.buffer
             );
+            glTexImage2D(
+                GL_TEXTURE_2D,
+                0,
+                GL_RED,
+                italic_face->glyph->bitmap.width,
+                italic_face->glyph->bitmap.rows,
+                0,
+                GL_RED,
+                GL_UNSIGNED_BYTE,
+                italic_face->glyph->bitmap.buffer
+            );
             // set texture options
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -147,12 +163,20 @@ int main()
                 glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
                 static_cast<unsigned int>(face->glyph->advance.x)
             };
+            Character italic_character = {
+                texture,
+                glm::ivec2(italic_face->glyph->bitmap.width, italic_face->glyph->bitmap.rows),
+                glm::ivec2(italic_face->glyph->bitmap_left, italic_face->glyph->bitmap_top),
+                static_cast<unsigned int>(italic_face->glyph->advance.x)
+            };
             Characters.insert(std::pair<char, Character>(c, character));
+            // Characters.insert(std::pair<char, Character>(c, italic_character));
         }
         glBindTexture(GL_TEXTURE_2D, 0);
     }
     // destroy FreeType once we're finished
     FT_Done_Face(face);
+    FT_Done_Face(italic_face);
     FT_Done_FreeType(ft);
 
     
@@ -179,10 +203,11 @@ int main()
         // render
         // ------
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        // glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        RenderText(shader, "This is sample text", 25.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
-        RenderText(shader, "(C) LearnOpenGL.com", 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
+        RenderText(shader, "Rendered text", 25.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
+        RenderText(shader, "(C) Rendered text with FreeType and scale 0.75", 100.0f, 570.0f, 0.75f, glm::vec3(0.3, 0.7f, 0.9f));
        
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
