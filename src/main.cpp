@@ -16,11 +16,6 @@
 #include "shader.h"
 #include "constants.h"
 
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow *window);
-void RenderText(Shader &shader, std::string text, float x, float y, float scale, glm::vec3 color);
-
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -33,13 +28,22 @@ struct Character {
     unsigned int Advance;   // Horizontal offset to advance to next glyph
 };
 
-std::map<GLchar, Character> Characters;
+
+struct Font {
+    std::map<GLchar, Character> characters;
+};
+
+
+Font LoadFont(const std::string& path, unsigned int fontSize);
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void processInput(GLFWwindow *window);
+void RenderText(Shader &shader, const Font& font, std::string text, float x, float y, float scale, glm::vec3 color);
+
 unsigned int VAO, VBO;
 
 int main()
 {
-    // glfw: initialize and configure
-    // ------------------------------
+    // GLFW init
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -49,168 +53,100 @@ int main()
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-    // glfw window creation
-    // --------------------
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "GLFW app", NULL, NULL);
-    if (window == NULL)
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "GLFW Text Rendering", nullptr, nullptr);
+    if (!window)
     {
         printf(LOAD_WINDOW_ERROR_MSG);
         glfwTerminate();
         return -1;
     }
+
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    // glad: load all OpenGL function pointers
-    // ---------------------------------------
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         printf(INIT_GLAD_ERROR_MSG);
         return -1;
     }
-    
+
     // OpenGL state
-    // ------------
-    glEnable(GL_CULL_FACE);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
-    // compile and setup the shader
-    // ----------------------------
+
+    // Shader
     Shader shader(SHADER_DIR "text.vs", SHADER_DIR "text.fs");
-    glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(SCR_WIDTH), 0.0f, static_cast<float>(SCR_HEIGHT));
+    glm::mat4 projection = glm::ortho(
+        0.0f,
+        static_cast<float>(SCR_WIDTH),
+        0.0f,
+        static_cast<float>(SCR_HEIGHT)
+    );
+
     shader.use();
-    glUniformMatrix4fv(glGetUniformLocation(shader.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+    glUniformMatrix4fv(
+        glGetUniformLocation(shader.ID, "projection"),
+        1,
+        GL_FALSE,
+        glm::value_ptr(projection)
+    );
 
-    // FreeType
-    // --------
-    FT_Library ft;
-    // All functions return a value different than 0 whenever an error occurred
-    if (FT_Init_FreeType(&ft))
-    {
-        printf(INIT_FREETYPE_ERROR_MSG);
-        return -1;
-    }
+    // =========================
+    // Load fonts
+    // =========================
+    const std::string regular_font_path = FONT_DIR REGULAR_FONT;
+    const std::string italic_font_path  = FONT_DIR ITALIC_FONT;
+    const std::string bold_font_path    = FONT_DIR BOLD_FONT;
 
-	// find path to font
-    // std::string font_name = FileSystem::getPath("resources/fonts/Antonio-Bold.ttf");
-    std::string font_name = FONT_DIR REGULAR_FONT;
-    std::string italic_font_name = FONT_DIR ITALIC_FONT;
-    if (font_name.empty() || italic_font_name.empty()) {
-        printf(LOAD_FONT_NAME_ERROR_MSG);
-        return -1;
-    }
-	
-	// load font as face
-    FT_Face face;
-    FT_Face italic_face;
-    if (FT_New_Face(ft, font_name.c_str(), 0, &face) || FT_New_Face(ft, italic_font_name.c_str(), 0, &italic_face)) {
-        printf(LOAD_FONT_ERROR_MSG);
-        return -1;
-    }
-    else {
-        // set size to load glyphs as
-        FT_Set_Pixel_Sizes(face, 0, 24);
-        FT_Set_Pixel_Sizes(italic_face, 0, 24);
+    Font regularFont = LoadFont(regular_font_path, 24);
+    Font italicFont  = LoadFont(italic_font_path, 24);
+    Font boldFont    = LoadFont(bold_font_path, 24);
 
-        // disable byte-alignment restriction
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-        // load first 128 characters of ASCII set
-        for (unsigned char c = 0; c < 128; c++)
-        {
-            // Load character glyph 
-            if (FT_Load_Char(face, c, FT_LOAD_RENDER) || FT_Load_Char(italic_face, c, FT_LOAD_RENDER))
-            {
-                printf(LOAD_GLYPH_ERROR_MSG);
-                continue;
-            }
-            // generate texture
-            unsigned int texture;
-            glGenTextures(1, &texture);
-            glBindTexture(GL_TEXTURE_2D, texture);
-            glTexImage2D(
-                GL_TEXTURE_2D,
-                0,
-                GL_RED,
-                face->glyph->bitmap.width,
-                face->glyph->bitmap.rows,
-                0,
-                GL_RED,
-                GL_UNSIGNED_BYTE,
-                face->glyph->bitmap.buffer
-            );
-            glTexImage2D(
-                GL_TEXTURE_2D,
-                0,
-                GL_RED,
-                italic_face->glyph->bitmap.width,
-                italic_face->glyph->bitmap.rows,
-                0,
-                GL_RED,
-                GL_UNSIGNED_BYTE,
-                italic_face->glyph->bitmap.buffer
-            );
-            // set texture options
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            // now store character for later use
-            Character character = {
-                texture,
-                glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-                glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-                static_cast<unsigned int>(face->glyph->advance.x)
-            };
-            Character italic_character = {
-                texture,
-                glm::ivec2(italic_face->glyph->bitmap.width, italic_face->glyph->bitmap.rows),
-                glm::ivec2(italic_face->glyph->bitmap_left, italic_face->glyph->bitmap_top),
-                static_cast<unsigned int>(italic_face->glyph->advance.x)
-            };
-            Characters.insert(std::pair<char, Character>(c, character));
-            // Characters.insert(std::pair<char, Character>(c, italic_character));
-        }
-        glBindTexture(GL_TEXTURE_2D, 0);
-    }
-    // destroy FreeType once we're finished
-    FT_Done_Face(face);
-    FT_Done_Face(italic_face);
-    FT_Done_FreeType(ft);
-
-    
-    // configure VAO/VBO for texture quads
-    // -----------------------------------
+    // =========================
+    // VAO / VBO
+    // =========================
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
+
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, nullptr, GL_DYNAMIC_DRAW);
+
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+    glVertexAttribPointer(
+        0,
+        4,
+        GL_FLOAT,
+        GL_FALSE,
+        4 * sizeof(float),
+        (void*)0
+    );
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    // render loop
-    // -----------
+    // =========================
+    // Render loop
+    // =========================
     while (!glfwWindowShouldClose(window))
     {
-        // input
-        // -----
         processInput(window);
 
-        // render
-        // ------
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        // glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        RenderText(shader, "Rendered text", 25.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
-        RenderText(shader, "(C) Rendered text with FreeType and scale 0.75", 100.0f, 570.0f, 0.75f, glm::vec3(0.3, 0.7f, 0.9f));
-       
-        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-        // -------------------------------------------------------------------------------
+        RenderText(
+            shader, regularFont, "Regular font text",
+            25.0f, 500.0f, 1.0f,
+            glm::vec3(0.9f, 0.9f, 0.9f)
+        );
+
+        RenderText(
+            shader, boldFont, "Bold font text", 
+            25.0f, 460.0f, 1.0f, 
+            glm::vec3(0.7f, 0.8f, 1.0f)
+        );
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -239,8 +175,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 // render line of text
 // -------------------
-void RenderText(Shader &shader, std::string text, float x, float y, float scale, glm::vec3 color)
-{
+void RenderText(Shader &shader, const Font& font, std::string text, float x, float y, float scale, glm::vec3 color) {
     // activate corresponding render state	
     shader.use();
     glUniform3f(glGetUniformLocation(shader.ID, "textColor"), color.x, color.y, color.z);
@@ -251,7 +186,7 @@ void RenderText(Shader &shader, std::string text, float x, float y, float scale,
     std::string::const_iterator c;
     for (c = text.begin(); c != text.end(); c++) 
     {
-        Character ch = Characters[*c];
+        Character ch = font.characters.at(*c);
 
         float xpos = x + ch.Bearing.x * scale;
         float ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
@@ -284,3 +219,55 @@ void RenderText(Shader &shader, std::string text, float x, float y, float scale,
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+
+Font LoadFont(const std::string& path, unsigned int fontSize) {
+    Font font;
+
+    FT_Library ft;
+    FT_Init_FreeType(&ft);
+
+    FT_Face face;
+    FT_New_Face(ft, path.c_str(), 0, &face);
+    FT_Set_Pixel_Sizes(face, 0, fontSize);
+
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    for (unsigned char c = 0; c < 128; c++)
+    {
+        FT_Load_Char(face, c, FT_LOAD_RENDER);
+
+        unsigned int texture;
+        glGenTextures(1, &texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexImage2D(
+            GL_TEXTURE_2D,
+            0,
+            GL_RED,
+            face->glyph->bitmap.width,
+            face->glyph->bitmap.rows,
+            0,
+            GL_RED,
+            GL_UNSIGNED_BYTE,
+            face->glyph->bitmap.buffer
+        );
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        Character character = {
+            texture,
+            glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+            glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+            static_cast<unsigned int>(face->glyph->advance.x)
+        };
+
+        font.characters.insert({ c, character });
+    }
+
+    FT_Done_Face(face);
+    FT_Done_FreeType(ft);
+
+    return font;
+}

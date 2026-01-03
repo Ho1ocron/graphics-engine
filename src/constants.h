@@ -1,5 +1,5 @@
-#define REGULAR_FONT "JetBrainsMono-Regular.ttf";
-#define BOLD_FONT    "JetBrainsMono-Bold.ttf";
+#define REGULAR_FONT  "JetBrainsMono-Regular.ttf";
+#define BOLD_FONT     "JetBrainsMono-Bold.ttf";
 #define ITALIC_FONT  "JetBrainsMono-Italic.ttf";
 
 #define LOAD_FONT_ERROR_MSG "ERROR::FREETYPE: Failed to load font"
