@@ -93,6 +93,12 @@ void MyApp::key_callback(GLFWwindow* window, int key, int scancode, int action, 
         glfwSetWindowShouldClose(window, true);
     else if (action == GLFW_PRESS || action == GLFW_REPEAT) 
         printf("Key %d pressed\n", key);
+        MyApp* app = static_cast<MyApp*>(glfwGetWindowUserPointer(window));
+        if (!app) return;
+            const auto& text = app->texts.empty() ? nullptr : app->texts[1].get();
+        if (text) {
+            text->setText("Key "+std::to_string(key)+" pressed");
+        }
 }
 
 
