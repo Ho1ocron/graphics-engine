@@ -41,7 +41,7 @@ add_executable(graphics-engine
     engine/main.cpp
     # src/app.cpp
 )
-
+add_dependencies(graphics-engine copy_assets)
 target_compile_definitions(graphics-engine PRIVATE
     SHADER_DIR="assets/shaders/"
     FONT_DIR="assets/fonts/"
