@@ -16,8 +16,8 @@ add_subdirectory(freetype/)
 add_subdirectory(glm/)
 
 add_library(math STATIC
-    src/math/src/vector2.cpp
-    src/math/src/vector3.cpp  
+    engine/math/src/vector2.cpp
+    engine/math/src/vector3.cpp  
 )
 
 add_library(glad STATIC 
@@ -37,7 +37,7 @@ target_include_directories(glad PUBLIC
 # )
 
 add_executable(graphics-engine
-    src/main.cpp
+    engine/main.cpp
     # src/app.cpp
 )
 
