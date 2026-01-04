@@ -55,7 +55,11 @@ target_include_directories(character_body_2d PUBLIC
     ${PROJECT_SOURCE_DIR}/engine/node/character_body_2d/include
 
 )
+add_library(drawable2d INTERFACE)
 
+target_include_directories(drawable2d INTERFACE
+    ${PROJECT_SOURCE_DIR}/engine/node/drawable/include
+)
 target_compile_definitions(text PUBLIC
     SHADER_DIR="assets/shaders/"
     FONT_DIR="assets/fonts/"
@@ -71,9 +75,9 @@ target_compile_definitions(character_body_2d PUBLIC
     FONT_DIR="assets/fonts/"
 )
 
-target_link_libraries(text PUBLIC glad freetype glm)
+target_link_libraries(text PUBLIC drawable2d glad freetype glm)
 target_link_libraries(collision_body PUBLIC glad freetype glm text)
-target_link_libraries(character_body_2d PUBLIC glad freetype glm text collision_body)
+target_link_libraries(character_body_2d PUBLIC drawable2d glad freetype glm text collision_body)
 
 target_include_directories(glad PUBLIC
     ${PROJECT_SOURCE_DIR}/glad/include

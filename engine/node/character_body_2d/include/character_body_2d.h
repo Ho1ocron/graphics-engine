@@ -9,15 +9,23 @@
 #include <variant>
 
 #include "collision_body.h"
+#include "drawable2d.h"
 
 
-template<typename Drawable>
+// template<class Drawable2D>
 struct CharacterBody2D : public CollisionBody
 {
-    protected:
-    Drawable sprite;
+protected:
+    std::unique_ptr<Drawable2D> sprite;
 
 public:
-    CharacterBody2D(const Drawable& new_sprite) : sprite(new_sprite) {}
+    explicit CharacterBody2D(std::unique_ptr<Drawable2D> new_sprite) : sprite(std::move(new_sprite)) {}
+
     void move();
+
+    void updateSprite(unsigned int w, unsigned int h) {
+        sprite->update(position, w, h);
+        sprite->render();
+    }
+
 };

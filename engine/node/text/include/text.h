@@ -11,6 +11,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
+#include "drawable2d.h"
 #include "shaders/shader.h"
 
 
@@ -27,7 +28,7 @@ struct Font {
 };
 
 
-struct Text 
+struct Text : Drawable2D
 {
 public:
     Text(
@@ -38,8 +39,8 @@ public:
         glm::vec3 color
     );
 
-    void render();
-    void update(const glm::vec3& new_position, const unsigned int& width, const unsigned int& height);
+    void render() override;
+    void update(const glm::vec3& new_position, const unsigned int& width, const unsigned int& height) override;
 
     void setScreenSize(const unsigned int& width, const unsigned int& height);
 

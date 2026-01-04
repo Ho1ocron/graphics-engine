@@ -16,12 +16,12 @@ protected:
 
 public:
     CollisionBody(
-        const glm::vec3& position,
-        const glm::vec3& direction,
-        const glm::vec3& velocity,
-        const float& speed,
-        const glm::vec3& acceleration,
-        const glm::vec3& size
+        const glm::vec3& position = glm::vec3(0.0f),
+        const glm::vec3& direction = glm::vec3(0.0f),
+        const glm::vec3& velocity = glm::vec3(0.0f),
+        const float& speed = 0.0f,
+        const glm::vec3& acceleration = glm::vec3(0.0f),
+        const glm::vec3& size = glm::vec3(0.0f)
     ) : position(position), direction(direction), size(size), velocity(velocity), speed(speed), acceleration(acceleration) {}
 
     void setPosition(const glm::vec3& new_position);
