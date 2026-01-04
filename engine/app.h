@@ -30,6 +30,9 @@ private:
     const unsigned int SCR_WIDTH = 800;
     const unsigned int SCR_HEIGHT = 600;
 
+    float deltaTime = 0.0f;
+    float lastFrame = 0.0f;
+
     unsigned int VAO, VBO;
 
     std::vector<std::unique_ptr<Text>> texts;
