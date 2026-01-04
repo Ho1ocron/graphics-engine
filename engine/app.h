@@ -27,8 +27,8 @@ class MyApp
 {
 private:
     const char* title;
-    const unsigned int SCR_WIDTH = 800;
-    const unsigned int SCR_HEIGHT = 600;
+    const unsigned int SCR_WIDTH;
+    const unsigned int SCR_HEIGHT;
 
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;
@@ -59,5 +59,5 @@ public:
     );
     void run(const std::function<void()>& on_update = {});
 
-    MyApp(const char* app_title, const unsigned int& width, const unsigned int& height) : title(app_title), SCR_WIDTH(width), SCR_HEIGHT(height) {}
+    MyApp(const char* app_title, const unsigned int& width = 800, const unsigned int& height = 600) : title(app_title), SCR_WIDTH(width), SCR_HEIGHT(height) {}
 };
