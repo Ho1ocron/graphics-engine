@@ -7,10 +7,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(graphics-engine)
 
-# file(COPY
-#     ${PROJECT_SOURCE_DIR}/assets/fonts/JetBrainsMono-Italic.ttf
-#     DESTINATION ${CMAKE_BINARY_DIR}
-# )
 
 add_subdirectory(glfw/)
 add_subdirectory(freetype/)
@@ -31,7 +27,6 @@ add_library(collision_body STATIC
 
 add_library(character_body_2d STATIC
     engine/node/character_body_2d/src/character_body_2d.cpp
-
 )
 
 add_library(glad STATIC 
@@ -104,5 +99,7 @@ target_compile_definitions(graphics-engine PRIVATE
 )
 
 
-# target_link_libraries(${PROJECT_NAME} PUBLIC glfw)
-target_link_libraries(graphics-engine PRIVATE math text collision_body character_body_2d glfw glad freetype glm "-framework OpenGL") 
+target_link_libraries(graphics-engine PRIVATE math text collision_body character_body_2d glfw glad freetype glm)
+if (APPLE)
+    target_compile_definitions("-framework OpenGL")
+endif()
