@@ -1,5 +1,8 @@
 #include "app.h"
 
+#include "GLFW/glfw3.h"
+#include "player/player.h"
+
 
 void MyApp::setup() {
     glfwInit();
@@ -13,15 +16,17 @@ void MyApp::setup() {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
+    // clang-format off
     window = glfwCreateWindow(
         SCR_WIDTH,
         SCR_HEIGHT,
-        "My Engine",
+        title,
         nullptr,
         nullptr
     );
+    // clang-format on
 
-    if (!window) {
+    if(!window) {
         printf(LOAD_WINDOW_ERROR_MSG);
         glfwTerminate();
         return;
@@ -34,12 +39,15 @@ void MyApp::setup() {
 
     glfwGetFramebufferSize(window, &SCR_WIDTH, &SCR_HEIGHT);
 
-
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height) {
+        glViewport(0, 0, width, height);
+        MyApp* app = static_cast<MyApp*>(glfwGetWindowUserPointer(window));
+        if(!app) return;
+    });
     // glfwSetKeyCallback(window, key_callback);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        printf(INIT_GLAD_ERROR_MSG);
+    if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        printf("!gladLoadGLLoader():%s\n", INIT_GLAD_ERROR_MSG);
         return;
     }
     glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
@@ -55,60 +63,41 @@ Text& MyApp::create_text(const char* text, const char* font_path, glm::vec3 posi
 
 
 void MyApp::render_text() {
-    for (const auto& text_ptr : texts) {
-        if (text_ptr) text_ptr->render();
-    }
+    for(const auto& text_ptr : texts)
+        if(text_ptr) text_ptr->render();
 }
 
 
-void MyApp::modify_text(
-    Text& text, const char* new_text, const char* new_font_path, 
-    std::optional<glm::vec3> position,
-    std::optional<float> font_size, std::optional<float> scale, 
-    std::optional<glm::vec3> color
-) {
+void MyApp::modify_text(Text& text, const char* new_text, const char* new_font_path, std::optional<glm::vec3> position, std::optional<float> font_size,
+                        std::optional<float> scale, std::optional<glm::vec3> color) {
     text.setText(new_text ? std::string(new_text) : text.getText());
 }
 
 
-void MyApp::init() {
-    setup();
-}
+void MyApp::init() { setup(); }
 
 
-void MyApp::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-    glViewport(0, 0, width, height);
-    MyApp* app = static_cast<MyApp*>(glfwGetWindowUserPointer(window));
-    if (!app) return;
-
-    // for (auto& text_ptr : app->texts) {
-    //     if (text_ptr) text_ptr->setScreenSize(width, height);
-    // }
-}
-
-
+// TODO: Input system
 void MyApp::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-    else if (action == GLFW_PRESS || action == GLFW_REPEAT) 
+    else if(action == GLFW_PRESS || action == GLFW_REPEAT)
         printf("Key %d pressed\n", key);
-        MyApp* app = static_cast<MyApp*>(glfwGetWindowUserPointer(window));
-        if (!app) return;
-            Text* text = app->texts.empty() ? nullptr : app->texts[1].get();
-        if (text) {
-            text->setText("Key "+std::to_string(key)+" pressed");
-        }
+    MyApp*&& p_app = static_cast<MyApp*>(glfwGetWindowUserPointer(window));
+    if(!p_app) return;
+    Text* text = p_app->texts.empty() ? nullptr : p_app->texts[1].get();
+    if(text) text->setText("Key " + std::to_string(key) + " pressed");
 }
 
 
 void MyApp::run(const std::function<void()>& on_update) {
-    if (!window) init();
+    if(!window) init();
     Player player(SCR_WIDTH, SCR_HEIGHT, window, glm::vec3{100.0f, 200.0f, 0.0f});
-    while (!glfwWindowShouldClose(window)) {
-        if (on_update) on_update();
+    while(!glfwWindowShouldClose(window)) {
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+        if(on_update) on_update();
 
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);

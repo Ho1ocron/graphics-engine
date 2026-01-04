@@ -1,10 +1,7 @@
 #pragma once
 
-#include <iostream>
-#include <stdio.h>
-#include <map>
+#include <memory>
 #include <vector>
-#include <string>
 #include <optional>
 #include <functional>
 
@@ -18,12 +15,11 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-#include "text.h"
+#include <text.h>
 #include "constants.h"
-#include "player/player.h"
 
 
-class MyApp 
+class MyApp
 {
 private:
     const char* title;
@@ -41,19 +37,18 @@ private:
 
     void setup();
 
-    static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
     static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
     void render_text();
-    
+
 public:
     GLFWwindow* get_window() { return window; }
     void init();
     Text& create_text(const char* text, const char* font_path, glm::vec3 position, float font_size, float scale, glm::vec3 color);
     void modify_text(
-        Text& text, const char* new_text, const char* new_font_path, 
+        Text& text, const char* new_text, const char* new_font_path,
         std::optional<glm::vec3> position,
-        std::optional<float> font_size, std::optional<float> scale, 
+        std::optional<float> font_size, std::optional<float> scale,
         std::optional<glm::vec3> color
     );
     void run(const std::function<void()>& on_update = {});
