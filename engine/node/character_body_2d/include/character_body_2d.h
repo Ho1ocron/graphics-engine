@@ -9,20 +9,20 @@
 #include <variant>
 
 #include "collision_body.h"
-#include "text.h"
+
 
 template<typename T>
 struct CharacterBody2D : public CollisionBody
 {
-private:
+protected:
     T texture;
 
 public:
     CharacterBody2D(
-        const glm::vec3& position,
-        const glm::vec3& velocity,
-        const float& speed,
-        const glm::vec3& acceleration,
+        const glm::vec3& position = {0.0f, 0.0f, 0.0f},
+        const glm::vec3& velocity = {0.0f, 0.0f, 0.0f},
+        const float& speed = 0.0f,
+        const glm::vec3& acceleration = {0.0f, 0.0f, 0.0f},
         const glm::vec3& size,
         const T& texture,
         const glm::vec3& direction = glm::vec3(0.0f)
