@@ -4,6 +4,7 @@
 #include "text.h"
 
 
+
 class Player : protected CharacterBody2D
 {
 private:
@@ -11,26 +12,26 @@ private:
     unsigned int screen_width;
     unsigned int screen_height;
 
-    // Text s;
+    static constexpr const char* default_font_path = FONT_DIR BOLD_FONT;
 
 
 public:
     Player(
-        const char* text,
-        const char* font_path,
-        const glm::vec3& init_position,
-        float fontSize,
-        float scale,
-        const glm::vec3& color,
         unsigned int screen_width,
-        unsigned int screen_height
+        unsigned int screen_height,
+        const glm::vec3& init_position = glm::vec3{0.0f},
+        const char* text = "@",
+        const char* font_path = default_font_path,
+        float font_size = 48.0f,
+        float scale = 1.0f,
+        const glm::vec3& color = glm::vec3{1.0f}
     )
     : CharacterBody2D(
         std::make_unique<Text>(
             text,
             font_path,
             init_position,
-            fontSize,
+            font_size,
             scale,
             screen_width,
             screen_height,

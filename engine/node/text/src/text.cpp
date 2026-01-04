@@ -138,8 +138,8 @@ void Text::render() {
 }
 
 
-void Text::update(const glm::vec3& new_position, const unsigned int& width, const unsigned int& height) {
+void Text::update(const glm::vec3& new_position, const unsigned int& screen_width, const unsigned int& screen_height) {
     position = new_position;
-    setScreenSize(width, height);
-    render();
+    setScreenSize(screen_width, screen_height);
+    // render();
 }

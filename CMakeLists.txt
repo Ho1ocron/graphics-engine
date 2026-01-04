@@ -104,6 +104,5 @@ target_compile_definitions(graphics-engine PRIVATE
 )
 
 
-
 # target_link_libraries(${PROJECT_NAME} PUBLIC glfw)
 target_link_libraries(graphics-engine PRIVATE math text collision_body character_body_2d glfw glad freetype glm "-framework OpenGL") 

@@ -19,8 +19,8 @@
 #include FT_FREETYPE_H
 
 #include "text.h"
-// #include "character_body_2d.h"
 #include "constants.h"
+#include "player/player.h"
 
 
 class MyApp 

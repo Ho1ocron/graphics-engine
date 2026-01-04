@@ -19,7 +19,7 @@ void MyApp::setup() {
     window = glfwCreateWindow(
         SCR_WIDTH,
         SCR_HEIGHT,
-        "Text Rendering (OOP)",
+        "My Engine",
         nullptr,
         nullptr
     );
@@ -104,13 +104,13 @@ void MyApp::key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 void MyApp::run(const std::function<void()>& on_update) {
     if (!window) init();
-
+    Player player(SCR_WIDTH, SCR_HEIGHT, glm::vec3{100.0f, 200.0f, 0.0f});
     while (!glfwWindowShouldClose(window)) {
         if (on_update) on_update();
 
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-
+        player.update(0.0f);
         render_text();
 
         glfwSwapBuffers(window);
