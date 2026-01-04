@@ -136,3 +136,10 @@ void Text::render() {
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
+
+
+void Text::update(const glm::vec3& new_position, const unsigned int& width, const unsigned int& height) {
+    position = new_position;
+    setScreenSize(width, height);
+    render();
+}

@@ -11,22 +11,13 @@
 #include "collision_body.h"
 
 
-template<typename T>
+template<typename Drawable>
 struct CharacterBody2D : public CollisionBody
 {
-protected:
-    T texture;
+    protected:
+    Drawable sprite;
 
 public:
-    CharacterBody2D(
-        const glm::vec3& position = {0.0f, 0.0f, 0.0f},
-        const glm::vec3& velocity = {0.0f, 0.0f, 0.0f},
-        const float& speed = 0.0f,
-        const glm::vec3& acceleration = {0.0f, 0.0f, 0.0f},
-        const glm::vec3& size,
-        const T& texture,
-        const glm::vec3& direction = glm::vec3(0.0f)
-    ) : CollisionBody(position, direction, velocity, speed, acceleration, size), texture(texture) {}
-
-    void update(float time_delta);
+    CharacterBody2D(const Drawable& new_sprite) : sprite(new_sprite) {}
+    void move();
 };
