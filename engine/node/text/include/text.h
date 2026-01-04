@@ -12,7 +12,7 @@
 #include FT_FREETYPE_H
 
 #include "drawable2d.h"
-#include "shaders/shader.h"
+#include <shader.h>
 
 
 struct Character {

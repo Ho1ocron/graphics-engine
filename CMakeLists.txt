@@ -21,6 +21,10 @@ add_library(text STATIC
     engine/node/text/src/text.cpp
 )
 
+add_library(render STATIC
+    engine/render/src/shader.cpp
+)
+
 add_library(collision_body STATIC
     engine/node/collision_body/src/collision_body.cpp
 )
@@ -39,6 +43,10 @@ target_include_directories(math PUBLIC
 
 target_include_directories(text PUBLIC
     ${PROJECT_SOURCE_DIR}/engine/node/text/include
+)
+
+target_include_directories(render PUBLIC
+    ${PROJECT_SOURCE_DIR}/engine/render/include
 )
 
 target_include_directories(collision_body PUBLIC
@@ -70,7 +78,8 @@ target_compile_definitions(character_body_2d PUBLIC
     FONT_DIR="assets/fonts/"
 )
 
-target_link_libraries(text PUBLIC drawable2d glad freetype glm)
+target_link_libraries(render PUBLIC glad glm)
+target_link_libraries(text PUBLIC drawable2d render glad freetype glm)
 target_link_libraries(collision_body PUBLIC glad freetype glm text)
 target_link_libraries(character_body_2d PUBLIC drawable2d glad freetype glm text collision_body)
 
