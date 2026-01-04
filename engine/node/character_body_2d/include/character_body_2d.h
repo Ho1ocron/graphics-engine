@@ -17,7 +17,7 @@ struct CharacterBody2D : public CollisionBody
 {
 protected:
     std::unique_ptr<Drawable2D> sprite;
-    
+
 public:
     explicit CharacterBody2D(std::unique_ptr<Drawable2D> new_sprite) : sprite(std::move(new_sprite)) {}
 
@@ -27,5 +27,4 @@ public:
         sprite->update(position, w, h);
         sprite->render();
     }
-
 };
