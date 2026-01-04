@@ -23,7 +23,7 @@ protected:
 public:
     explicit CharacterBody2D(std::unique_ptr<Drawable2D> new_sprite) : sprite(std::move(new_sprite)) {}
 
-    void move(float deltaTime);
+    void move(float deltaTime, float screen_width, float screen_hight);
 
     void updateSprite(unsigned int width, unsigned int height);
 };

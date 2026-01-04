@@ -1,14 +1,15 @@
 #include "character_body_2d.h"
 
-
-void CharacterBody2D::updateSprite(unsigned int width, unsigned int height) {
+void CharacterBody2D::updateSprite(unsigned int width, unsigned int height)
+{
     sprite->update(position, width, height);
     sprite->render();
 }
 
-
-void CharacterBody2D::move(float deltaTime) {
+void CharacterBody2D::move(float deltaTime, float screen_width, float screen_hight)
+{
     position.x += direction.x * speed * deltaTime;
     position.y += direction.y * speed * deltaTime;
-    // position.x = std::clamp(position.x, 1, 2);
+    position.x = glm::clamp(position.x, 0.0f, screen_width);
+    position.y = glm::clamp(position.y, 0.0f, screen_hight);
 }

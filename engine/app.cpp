@@ -1,11 +1,6 @@
 #include "app.h"
 
 
-void MyApp::create_window() {
- 
-}
-
-
 void MyApp::setup() {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -77,7 +72,6 @@ void MyApp::modify_text(
 
 
 void MyApp::init() {
-    create_window();
     setup();
 }
 

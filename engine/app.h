@@ -39,7 +39,6 @@ private:
 
     GLFWwindow* window = nullptr;
 
-    void create_window(); 
     void setup();
 
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
