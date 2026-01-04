@@ -35,9 +35,8 @@ void MyApp::setup() {
 
     glfwMakeContextCurrent(window);
 
-#ifdef __APPLE__
     glfwGetFramebufferSize(window, &SCR_WIDTH, &SCR_HEIGHT);
-#endif
+
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     // glfwSetKeyCallback(window, key_callback);
