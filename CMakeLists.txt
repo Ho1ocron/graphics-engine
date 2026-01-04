@@ -14,7 +14,7 @@ add_subdirectory(glm/)
 
 add_library(math STATIC
     engine/math/src/vector2.cpp
-    engine/math/src/vector3.cpp  
+    engine/math/src/vector3.cpp
 )
 
 add_library(text STATIC
@@ -29,7 +29,7 @@ add_library(character_body_2d STATIC
     engine/node/character_body_2d/src/character_body_2d.cpp
 )
 
-add_library(glad STATIC 
+add_library(glad STATIC
     glad/src/glad.c
 )
 
@@ -101,5 +101,5 @@ target_compile_definitions(graphics-engine PRIVATE
 
 target_link_libraries(graphics-engine PRIVATE math text collision_body character_body_2d glfw glad freetype glm)
 if (APPLE)
-    target_compile_definitions("-framework OpenGL")
+    target_compile_definitions(graphics-engine -framework OpenGL)
 endif()
