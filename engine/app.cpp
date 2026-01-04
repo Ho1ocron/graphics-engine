@@ -11,6 +11,8 @@ void MyApp::setup() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHintString(GLFW_X11_CLASS_NAME, "graphics-engine");
+    glfwWindowHintString(GLFW_X11_INSTANCE_NAME, "graphics-engine");
 
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
