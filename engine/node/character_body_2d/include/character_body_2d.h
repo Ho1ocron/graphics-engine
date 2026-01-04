@@ -23,8 +23,5 @@ public:
 
     void move();
 
-    void updateSprite(unsigned int w, unsigned int h) {
-        sprite->update(position, w, h);
-        sprite->render();
-    }
+    void updateSprite(unsigned int width, unsigned int height);
 };
