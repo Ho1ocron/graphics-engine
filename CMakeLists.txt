@@ -30,7 +30,7 @@ add_library(collision_body STATIC
 )
 
 add_library(character_body_2d STATIC
-    engine/node/character_body_2d/src/character_body.cpp
+    engine/node/character_body_2d/src/character_body_2d.cpp
 
 )
 
