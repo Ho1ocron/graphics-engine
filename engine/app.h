@@ -27,8 +27,8 @@ class MyApp
 {
 private:
     const char* title;
-    const unsigned int SCR_WIDTH;
-    const unsigned int SCR_HEIGHT;
+    int SCR_WIDTH;
+    int SCR_HEIGHT;
 
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;

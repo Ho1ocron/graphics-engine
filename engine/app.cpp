@@ -34,13 +34,9 @@ void MyApp::setup() {
     glfwSetWindowUserPointer(window, this);
 
     glfwMakeContextCurrent(window);
-    int fbWidth, fbHeight;
 
 #ifdef __APPLE__
-    glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
-#else
-    fWidth = SCR_WIDTH;
-    fbHeight = SCR_HEIGHT
+    glfwGetFramebufferSize(window, &SCR_WIDTH, &SCR_HEIGHT);
 #endif
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
@@ -50,11 +46,9 @@ void MyApp::setup() {
         printf(INIT_GLAD_ERROR_MSG);
         return;
     }
-    glViewport(0, 0, fbWidth, fbHeight);
+    glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    glfwSwapInterval(0);
 }
 
 
