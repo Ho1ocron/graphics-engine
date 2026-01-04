@@ -34,15 +34,23 @@ void MyApp::setup() {
     glfwSetWindowUserPointer(window, this);
 
     glfwMakeContextCurrent(window);
+    int fbWidth, fbHeight;
+
+#ifdef __APPLE__
+    glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+#else
+    fWidth = SCR_WIDTH;
+    fbHeight = SCR_HEIGHT
+#endif
+
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    glfwSetKeyCallback(window, key_callback);
+    // glfwSetKeyCallback(window, key_callback);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         printf(INIT_GLAD_ERROR_MSG);
         return;
     }
-
-    glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+    glViewport(0, 0, fbWidth, fbHeight);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
@@ -82,9 +90,9 @@ void MyApp::framebuffer_size_callback(GLFWwindow* window, int width, int height)
     MyApp* app = static_cast<MyApp*>(glfwGetWindowUserPointer(window));
     if (!app) return;
 
-    for (auto& text_ptr : app->texts) {
-        if (text_ptr) text_ptr->setScreenSize(width, height);
-    }
+    // for (auto& text_ptr : app->texts) {
+    //     if (text_ptr) text_ptr->setScreenSize(width, height);
+    // }
 }
 
 

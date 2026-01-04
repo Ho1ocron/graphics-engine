@@ -42,7 +42,7 @@ public:
     void render() override;
     void update(const glm::vec3& new_position, const unsigned int& screen_width, const unsigned int& screen_height) override;
 
-    void setScreenSize(const unsigned int& width, const unsigned int& height);
+    // void setScreenSize(const unsigned int& width, const unsigned int& height);
 
     void setText(const std::string& new_text) { content = new_text; }
     std::string getText() const { return content; }

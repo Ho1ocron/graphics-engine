@@ -29,7 +29,7 @@ int main() {
         regular_font.c_str(),
         glm::vec3{100.0f, 100.0f, 0.0f},
         48.0f,
-        1.0f,
+        0.5f,
         glm::vec3{1.0f, 1.0f, 1.0f}
     );
 
@@ -38,7 +38,7 @@ int main() {
         bold_font.c_str(),
         glm::vec3{25.0f, 460.0f, 0.0f},
         48.0f,
-        1.0f,
+        0.5f,
         glm::vec3{0.8f, 0.3f, 0.2f}
     );
 

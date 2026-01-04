@@ -88,11 +88,11 @@ void Text::setupBuffers() {
 }
 
 
-void Text::setScreenSize(const unsigned int& width, const unsigned int& height) {
-    glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(width), 0.0f, static_cast<float>(height));
-    shader.use();
-    shader.setMat4("projection", projection);
-}
+// void Text::setScreenSize(const unsigned int& width, const unsigned int& height) {
+//     glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(width), 0.0f, static_cast<float>(height));
+//     shader.use();
+//     shader.setMat4("projection", projection);
+// }
 
 
 void Text::render() {
@@ -140,6 +140,6 @@ void Text::render() {
 
 void Text::update(const glm::vec3& new_position, const unsigned int& screen_width, const unsigned int& screen_height) {
     position = new_position;
-    setScreenSize(screen_width, screen_height);
+    // setScreenSize(screen_width, screen_height);
     // render();
 }

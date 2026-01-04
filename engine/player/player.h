@@ -27,7 +27,7 @@ public:
         const char* text = "@",
         const char* font_path = default_font_path,
         float font_size = 48.0f,
-        float scale = 1.0f,
+        float scale = 0.5f,
         const glm::vec3& color = glm::vec3{1.0f}
     )
     : CharacterBody2D(
