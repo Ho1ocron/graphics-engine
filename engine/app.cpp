@@ -53,6 +53,8 @@ void MyApp::setup() {
     glViewport(0, 0, fbWidth, fbHeight);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glfwSwapInterval(0);
 }
 
 
