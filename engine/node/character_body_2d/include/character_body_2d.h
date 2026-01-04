@@ -10,6 +10,7 @@
 
 #include "collision_body.h"
 #include "drawable2d.h"
+#include "collision_shape_2d.h"
 
 
 // template<class Drawable2D>
@@ -17,6 +18,7 @@ struct CharacterBody2D : public CollisionBody
 {
 protected:
     std::unique_ptr<Drawable2D> sprite;
+    std::unique_ptr<CircleCollisionShape2D> hitbox;
 
 public:
     explicit CharacterBody2D(std::unique_ptr<Drawable2D> new_sprite) : sprite(std::move(new_sprite)) {}
