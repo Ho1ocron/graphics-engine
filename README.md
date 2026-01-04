@@ -2,11 +2,10 @@
 
 A small, personal graphics engine written in C++ — a place to experiment with math utilities and GLFW-based rendering.
 
----
 
 ## 🔧 Prerequisites
 
-- **macOS** (instructions use macOS terminal) — works on Linux/Windows with equivalent tooling.
+- **macOS** (instructions use macOS terminal) — should work on Linux/Windows with equivalent tooling.
 - **CMake** (>= 3.14)
 - **A C/C++ compiler** (Xcode Command Line Tools / clang / gcc)
 - Optional: **Ninja** (recommended for faster builds)
@@ -23,7 +22,7 @@ brew install cmake ninja
 
 ## ⚙️ Initialize the project
 
-The project contains GLFW as a git submodule. Clone and initialize submodules before building:
+The project contains GLFW, GLM and Freetype as a git submodule. Clone and initialize submodules before building:
 
 ```bash
 git clone --recursive https://github.com/Ho1ocron/graphics-engine.git
@@ -32,40 +31,20 @@ cd graphics-engine
 # git submodule update --init --recursive
 ```
 
----
 
-## 🛠️ Build
+## 🛠️ Build and run
 
-From the project root (recommended out-of-source build):
-
-```bash
-# Create and enter a build directory
-mkdir -p build && cd build
-
-# Configure the project (default generator will be used; set -G "Ninja" to use Ninja)
-cmake -S .. -B . -DCMAKE_BUILD_TYPE=Release
-
-# Build (use parallel jobs)
-cmake --build . --config Release -- -j$(sysctl -n hw.ncpu)
-```
-
-If you prefer Ninja:
+From the project root:
 
 ```bash
-cmake -S .. -B . -G "Ninja" -DCMAKE_BUILD_TYPE=Release
-cmake --build .
-```
+# Create a build directory
+mkdir build
 
-The resulting executable will be at `build/graphics-engine`.
+# Configure the project (see cmake --list-presets)
+cmake --preset debug-ninja
 
----
-
-## ▶️ Run
-
-From project root:
-
-```bash
-./build/graphics-engine
+# Build in parallel and run
+cmake --build --preset debug -j$(sysctl -n hw.ncpu) && ./build/graphics-engine
 ```
 
 If you want to run with a debugger or from an IDE, you can generate an Xcode project or other generator using CMake (e.g. `-G "Xcode"`).
