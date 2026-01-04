@@ -23,7 +23,7 @@ public:
         unsigned int screen_height,
         GLFWwindow* app_window,
         const glm::vec3& init_position = glm::vec3{0.0f},
-        const float& _speed = 600.0f,
+        const float& _speed = 1000.0f,
         const char* text = "@",
         const char* font_path = default_font_path,
         float font_size = 48.0f,
