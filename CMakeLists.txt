@@ -101,5 +101,5 @@ target_compile_definitions(graphics-engine PRIVATE
 
 target_link_libraries(graphics-engine PRIVATE math text collision_body character_body_2d glfw glad freetype glm)
 if (APPLE)
-    target_compile_definitions(graphics-engine -framework OpenGL)
+    target_compile_options(graphics-engine PRIVATE -framework OpenGL)
 endif()
