@@ -1,7 +1,7 @@
 #include "app.h"
 
 #include "GLFW/glfw3.h"
-#include "player/player.h"
+// #include "player/player.h"
 
 
 void MyApp::setup() {
@@ -56,22 +56,22 @@ void MyApp::setup() {
 }
 
 
-Text& MyApp::create_text(const char* text, const char* font_path, glm::vec3 position, float font_size, float scale, glm::vec3 color) {
-    texts.emplace_back(std::make_unique<Text>(text, font_path, position, font_size, scale, SCR_WIDTH, SCR_HEIGHT, color));
-    return *texts.back();
-}
+// Text& MyApp::create_text(const char* text, const char* font_path, glm::vec3 position, float font_size, float scale, glm::vec3 color) {
+//     texts.emplace_back(std::make_unique<Text>(text, font_path, position, font_size, scale, SCR_WIDTH, SCR_HEIGHT, color));
+//     return *texts.back();
+// }
 
 
-void MyApp::render_text() {
-    for(const auto& text_ptr : texts)
-        if(text_ptr) text_ptr->render();
-}
+// void MyApp::render_text() {
+//     for(const auto& text_ptr : texts)
+//         if(text_ptr) text_ptr->render();
+// }
 
 
-void MyApp::modify_text(Text& text, const char* new_text, const char* new_font_path, std::optional<glm::vec3> position, std::optional<float> font_size,
-                        std::optional<float> scale, std::optional<glm::vec3> color) {
-    text.setText(new_text ? std::string(new_text) : text.getText());
-}
+// void MyApp::modify_text(Text& text, const char* new_text, const char* new_font_path, std::optional<glm::vec3> position, std::optional<float> font_size,
+//                         std::optional<float> scale, std::optional<glm::vec3> color) {
+//     text.setText(new_text ? std::string(new_text) : text.getText());
+// }
 
 
 void MyApp::init() { setup(); }
@@ -85,24 +85,24 @@ void MyApp::key_callback(GLFWwindow* window, int key, int scancode, int action, 
         printf("Key %d pressed\n", key);
     MyApp*&& p_app = static_cast<MyApp*>(glfwGetWindowUserPointer(window));
     if(!p_app) return;
-    Text* text = p_app->texts.empty() ? nullptr : p_app->texts[1].get();
-    if(text) text->setText("Key " + std::to_string(key) + " pressed");
+    // Text* text = p_app->texts.empty() ? nullptr : p_app->texts[1].get();
+    // if(text) text->setText("Key " + std::to_string(key) + " pressed");
 }
 
 
 void MyApp::run(const std::function<void()>& on_update) {
     if(!window) init();
-    Player player(SCR_WIDTH, SCR_HEIGHT, window, glm::vec3{100.0f, 200.0f, 0.0f});
+    // Player player(SCR_WIDTH, SCR_HEIGHT, window, glm::vec3{100.0f, 200.0f, 0.0f});
     while(!glfwWindowShouldClose(window)) {
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
         if(on_update) on_update();
 
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        player.update(deltaTime);
-        render_text();
+        // player.update(deltaTime);
+        // render_text();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
