@@ -1,3 +1,6 @@
+#ifndef SHADER_PATHS_HPP
+#define SHADER_PATHS_HPP
+
 enum class ShaderID { TEXT };
 
 struct ShadersPaths {
@@ -30,3 +33,5 @@ _SHADER2(TEXT, "text.vs", "text.fs")
 
 #undef _SHADER2
 #undef _SHADER3
+
+#endif

@@ -1,8 +1,11 @@
 #include <cmath>
+#include <string>
 
 #include "app.h"
+#include "camera.cpp"
 #include "constants.h"
 #include "font.cpp"
+#include "label.cpp"
 #include "resource_manager.cpp"
 
 
@@ -52,14 +55,19 @@ int main() {
     // update_text(text1);
     // });
     ResourceManager resource_manager{};
+    Camera camera{};
+    camera.set_dimensions(800, 600);
     auto&& shader = resource_manager.get_shader<ShaderID::TEXT>();
     shader->use();
     shader->setInt("font", static_cast<int>(TextureUnits::FONT_ATLAS));
     shader->setVec3("textColor", {1.0, 1.0, 1.0});
-    Label label{resource_manager.get_font(REGULAR_FONT, 96), {0.0, 1.0, 0.0}, "abcdefghijhklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!!!!!!!!!!"};
+    Label::StaticResources default_label{resource_manager};
+    Label label{resource_manager.get_font(REGULAR_FONT, 96), {0.0, 1.0, 0.0}, {0.0, 0.0}, "abcdefghijhklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!!!!!!!!!!"};
     app.run([&]() {
-        shader->use();
-        label.draw();
+        // shader->use();
+        std::string str = "{" + std::to_string(glfwGetTime()) + "}";
+        label.set_text(str.c_str(), str.size());
+        label.draw(default_label, camera.get_view_projection());
     });
 
     return 0;
