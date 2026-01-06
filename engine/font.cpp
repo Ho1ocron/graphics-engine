@@ -5,6 +5,7 @@
 #include <array>
 #include <cstring>
 
+#include "app.h"
 #include "constants.h"
 #include "font.h"
 #include "freetype/freetype.h"
@@ -26,7 +27,6 @@ Texture FontAtlas::init_atlas(const char* path, const unsigned int& height) {
         return Texture(0, 0, 0);
     }
     FT_Set_Pixel_Sizes(face, 0, height);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     unsigned int w = 0, h = 0;
     for(unsigned char c = 0; c < NUM_CHARACTERS; c++ /* :0 */) {
         if(FT_Load_Char(face, static_cast<char>(c), FT_LOAD_RENDER)) {
@@ -39,6 +39,7 @@ Texture FontAtlas::init_atlas(const char* path, const unsigned int& height) {
 
     GLuint texture;
     glGenTextures(1, &texture);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -60,7 +61,7 @@ Texture FontAtlas::init_atlas(const char* path, const unsigned int& height) {
 
         Character character;
         character.size = {cw, ch};
-        character.bearing = {face->glyph->bitmap_left, face->glyph->bitmap_top};
+        character.offset = {face->glyph->bitmap_left, ch-face->glyph->bitmap_top};
         character.Advance = face->glyph->advance.x;
         character.top_left = {float(x) / float(w), 0.0f};
         character.bottom_right = {float(x + cw) / float(w), float(ch) / float(h)};
@@ -70,6 +71,7 @@ Texture FontAtlas::init_atlas(const char* path, const unsigned int& height) {
     }
     FT_Done_Face(face);
     FT_Done_FreeType(ft);
+    glBindTexture(GL_TEXTURE_2D, 0);
 
     return Texture(texture, w, h);
 }

@@ -1,73 +1,66 @@
+#include <glad/glad.h>
+// hey clang-format please dont shuffle includes here
+#include <GLFW/glfw3.h>
+// thank you
 #include <cmath>
 #include <string>
+#include <string_view>
 
 #include "app.h"
-#include "camera.cpp"
 #include "constants.h"
-#include "font.cpp"
-#include "label.cpp"
-#include "resource_manager.cpp"
-
-
-// void update_text(Text& text) {
-//     float time = static_cast<float>(glfwGetTime());
-//     glm::vec3 pos = text.getPosition();
-//     pos.x = 100.0f + 60.0f * sinf(time);
-//     pos.y = 100.0f + 20.0f * sinf(time * 2.0f);
-//     text.setPosition(pos);
-//     text.setColor(glm::vec3{ (sinf(time) + 1.0f) / 2.0f, (cosf(time) + 1.0f) / 2.0f, 0.5f });
-
-//      // toggle text every second
-//     if (static_cast<int>(time))
-//         text.setText("Seconds: "+std::to_string(static_cast<int>(time)));
-// }
 
 
 int main() {
-    MyApp app("Text Rendering", 800, 600);
+    glfwInit();
+    GLFWwindow *&&window = MyApp::create_window("[LOADING] Text Rendering", 800, 600);
+    if(!window) {
+        glfwTerminate();
+        return 1;
+    }
+    glfwMakeContextCurrent(window);
+    if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        printf("!gladLoadGLLoader():%s\n", INIT_GLAD_ERROR_MSG);
+        return 1;
+    }
 
-    // std::string regular_font = FONT_DIR REGULAR_FONT;
-    // std::string bold_font    = FONT_DIR BOLD_FONT;
+    MyApp app(std::move(window), "Text Rendering");
 
-    app.init();
 
-    // Text& text1 = app.create_text(
-    //     "Regular font text",
-    //     regular_font.c_str(),
-    //     glm::vec3{100.0f, 100.0f, 0.0f},
-    //     48.0f,
-    //     1.0f,
-    //     glm::vec3{1.0f, 1.0f, 1.0f}
-    // );
+    // clang-format off
+    Label &label1 = app.emplace_label("Regular font text",
+           REGULAR_FONT,
+           {-250, 50},
+           48,
+           {1.0, 1.0, 1.0}
+    );
+    Label &label2 = app.emplace_label("Bold font text",
+           BOLD_FONT,
+           {-250, -50},
+           48,
+           {0.8, 0.3, 0.2}
+    );
+    // printf("%p %p\n", label1.get(), label2.get());
+    Label &label3 = app.emplace_label("Italic font text",
+           ITALIC_FONT,
+           {-250, -150},
+           48,
+           {0.8, 0.3, 0.2}
+    );
+    // clang-format on
+    constexpr auto height = 16;
+    constexpr size_t count = 160;
+    constexpr glm::vec2 origin = {-50.0, 0.0};
+    for(size_t i = 0; i < count; i++) {
+        app.emplace_label("aghsfdjkghfjkadshjklf", REGULAR_FONT, origin + glm::vec2(0, height * (int(i) - int(count / 2))), height);
+    }
 
-    // Text& text2 = app.create_text(
-    //     "Bold font text",
-    //     bold_font.c_str(),
-    //     glm::vec3{25.0f, 460.0f, 0.0f},
-    //     48.0f,
-    //     1.0f,
-    //     glm::vec3{0.8f, 0.3f, 0.2f}
-    // );
 
-    // text2.setText("Modified bold text!");
+    label2.set_text("Modified bold text!");
+    label1.set_text("Modified regular text!").set_pos({-300, 50}).set_color({0, 1, 0});
 
-    // app.run([&]() {
-    // update_text(text1);
-    // });
-    ResourceManager resource_manager{};
-    Camera camera{};
-    camera.set_dimensions(800, 600);
-    auto&& shader = resource_manager.get_shader<ShaderID::TEXT>();
-    shader->use();
-    shader->setInt("font", static_cast<int>(TextureUnits::FONT_ATLAS));
-    shader->setVec3("textColor", {1.0, 1.0, 1.0});
-    Label::StaticResources default_label{resource_manager};
-    Label label{resource_manager.get_font(REGULAR_FONT, 96), {0.0, 1.0, 0.0}, {0.0, 0.0}, "abcdefghijhklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!!!!!!!!!!"};
     app.run([&]() {
-        // shader->use();
-        std::string str = "{" + std::to_string(glfwGetTime()) + "}";
-        label.set_text(str.c_str(), str.size());
-        label.draw(default_label, camera.get_view_projection());
+        ;
+        label2.set_text("{" + std::to_string(app.get_time()) + "}");
     });
 
     return 0;

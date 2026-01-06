@@ -3,6 +3,7 @@
 
 #include <map>
 #include <memory>
+#include <string_view>
 #include <utility>
 
 #include "font.h"
@@ -14,7 +15,7 @@ inline constexpr decltype(std::ignore) preload{};
 class ResourceManager {
 public:
     using ShaderKey = ShaderID;
-    using FontKey = std::pair<const char*, const unsigned int>;
+    using FontKey = std::pair<std::string, const unsigned int>;
 
 private:
     std::map<ShaderKey, std::shared_ptr<Shader> > shaders;
@@ -29,6 +30,6 @@ public:
         return ptr;
     }
     [[nodiscard("Are you preloading resources? Use preload = get_font() then")]]
-    std::shared_ptr<FontAtlas> get_font(const char* name, const unsigned int size = 12);
+    std::shared_ptr<FontAtlas> get_font(const std::string_view& name, const unsigned int size = 12);
 };
 #endif

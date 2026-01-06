@@ -3,37 +3,42 @@
 
 #include "label.hpp"
 
+#include <cstdio>
 #include <cstring>
+#include <string_view>
 
+#include "app.h"
+
+Label& Label::set_text(const std::string_view& str) { return set_text(str.data(), str.size()); }
 // TODO: lazy buffers updating
-void Label::set_text(const char* buf, const size_t& len) {
+Label& Label::set_text(const char* buf, const size_t& len) {
     // TODO: use the same buffer for all set_text() calls so there will be no allocs
     SingleCharacter* vertices = new SingleCharacter[len]();
     GLuint* indices = new GLuint[len * INDICES_COUNT]();
 
     unsigned int x_px = 0;
     // fill VBO
-    for(unsigned int i = 0; i < len; i++) {
-        SingleCharacter& c_data = vertices[i];
-        const auto& c_font = _font->get_char(buf[i]);
+    for(unsigned int c = 0; c < len; c++) {
+        SingleCharacter& c_data = vertices[c];
+        const auto& c_font = _font->get_char(buf[c]);
         const float&& w = _font->get_texture().w();
-        // const float&& h = _font->get_height();
         const float&& h = _font->get_texture().h();
         const float&& font_h = _font->get_height();
 
         // clang-format off
-        c_data.top_left.pos         = {(x_px), (c_font.size.y)};
+        c_data.top_left.pos         = {(x_px+c_font.offset.x), c_font.size.y-c_font.offset.y};
         c_data.top_left.tex_pos     = {c_font.top_left.x, c_font.top_left.y};
-        c_data.top_right.pos        = {(x_px+c_font.size.x), (c_font.size.y)};
+        c_data.top_right.pos        = {(x_px+c_font.size.x+c_font.offset.x), c_font.size.y-c_font.offset.y};
         c_data.top_right.tex_pos    = {c_font.bottom_right.x, c_font.top_left.y};
-        c_data.bottom_left.pos      = {(x_px), 0.0};
+        c_data.bottom_left.pos      = {(x_px+c_font.offset.x), -c_font.offset.y};
         c_data.bottom_left.tex_pos  = {c_font.top_left.x, c_font.bottom_right.y};
-        c_data.bottom_right.pos     = {(x_px+c_font.size.x), 0.0};
+        c_data.bottom_right.pos     = {(x_px+c_font.size.x+c_font.offset.x), -c_font.offset.y};
         c_data.bottom_right.tex_pos = {c_font.bottom_right.x, c_font.bottom_right.y};
         // clang-format on
 
 
-        x_px += c_font.size.x;
+        x_px += (c_font.Advance >> 6);
+        // x_px += c_font.size.x;
     }
     // fill EBO
     for(unsigned int i = 0, v = 0; i < INDICES_COUNT * len; i += INDICES_COUNT, v += VERTICES_COUNT) {
@@ -46,6 +51,8 @@ void Label::set_text(const char* buf, const size_t& len) {
     }
 
     glBindVertexArray(_VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(SingleCharacter) * len, vertices, GL_STATIC_DRAW);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * len * INDICES_COUNT, indices, GL_STATIC_DRAW);
 
@@ -54,9 +61,18 @@ void Label::set_text(const char* buf, const size_t& len) {
     glBindVertexArray(0);
     delete[] vertices;
     delete[] indices;
+    return *this;
+}
+Label& Label::set_color(const glm::vec3& color) {
+    this->color = color;
+    return *this;
+}
+Label& Label::set_pos(const glm::vec2& pos) {
+    this->pos = pos;
+    return *this;
 }
 
-Label::Label(const std::shared_ptr<FontAtlas>& font, const glm::vec3& color, const glm::vec2& pos, const char* buf, const size_t len)
+Label::Label(const std::shared_ptr<FontAtlas>& font, const glm::vec2& pos, const glm::vec3& color, const char* buf, const size_t len)
     : color(color), _font(font), pos(pos) {
     glGenVertexArrays(1, &_VAO);
     glGenBuffers(1, &_VBO);
@@ -68,7 +84,6 @@ Label::Label(const std::shared_ptr<FontAtlas>& font, const glm::vec3& color, con
 
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
-    glEnableVertexAttribArray(2);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(CharVertex), (void*)offsetof(CharVertex, pos));
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(CharVertex), (void*)offsetof(CharVertex, tex_pos));
 
@@ -81,6 +96,7 @@ Label::Label(const std::shared_ptr<FontAtlas>& font, const glm::vec3& color, con
 void Label::draw(const StaticResources& res, const glm::mat4x4 VP) const {
     _font->use();
     res.shader->setMat4("MVP", VP * get_model());
+    res.shader->setVec3("textColor", color);
     glBindVertexArray(_VAO);
     glDrawElements(GL_TRIANGLES, _len * INDICES_COUNT, GL_UNSIGNED_INT, 0);
 }

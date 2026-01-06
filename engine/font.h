@@ -15,7 +15,7 @@ class FontAtlas {
         // unsigned int TextureID;
         unsigned int Advance;
         glm::ivec2 size;
-        glm::ivec2 bearing;
+        glm::ivec2 offset;
         glm::vec2 top_left;
         glm::vec2 bottom_right;
     };

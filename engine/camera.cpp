@@ -7,21 +7,21 @@
 
 
 class Camera {
-    glm::vec2 _dimensions{};
+    glm::vec2 _dimensions{1.0f, 1.0f};
 
 public:
     glm::vec2 pos{};
-    glm::mat4x4 projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.0f, 1.0f);
-    glm::mat4x4 get_view_projection() {
+    float zoom = 1.0f;
+    // glm::mat4x4 projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.0f, 1.0f);
+
+    glm::mat4x4 get_view_projection() const {
         glm::mat4x4 view{1.0f};
         view[3] = glm::vec4(pos, 0.0f, 1.0f);
-        return projection * view;
+        return glm::ortho(-_dimensions.x / 2.0f / zoom, _dimensions.x / 2.0f / zoom, -_dimensions.y / 2.0f / zoom, _dimensions.y / 2.0f / zoom, 0.0f, 1.0f) * view;
     }
     inline void set_dimensions(const uint w, const uint h) {
-        _dimensions.x = w;
-        _dimensions.y = h;
-        const float aspect = _dimensions.x / _dimensions.y;
-        projection = glm::ortho(-_dimensions.x / 2.0f, _dimensions.x / 2.0f, -_dimensions.y / 2.0f, _dimensions.y / 2.0f, 0.0f, 1.0f);
+        _dimensions = {w, h};
+        // projection = glm::ortho(-_dimensions.x / 2.0f, _dimensions.x / 2.0f, -_dimensions.y / 2.0f, _dimensions.y / 2.0f, 0.0f, 1.0f);
     }
     inline glm::vec2 get_dimensions() const { return _dimensions; }
 };

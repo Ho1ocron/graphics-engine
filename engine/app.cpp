@@ -1,11 +1,21 @@
 #include "app.h"
 
-#include "GLFW/glfw3.h"
+#include <iterator>
+#include <memory>
+
+#include "font.cpp"
+#include "label.cpp"
+#include "resource_manager.cpp"
 // #include "player/player.h"
 
 
-void MyApp::setup() {
-    glfwInit();
+Label& MyApp::emplace_label(const char* text, const char* font, const glm::vec2& pos, const float& height, const glm::vec3& color) {
+    return *labels.objects.emplace_back(std::make_unique<Label>(resource_manager.get_font(font, height), pos, color, text));
+}
+Label& MyApp::push_label(std::unique_ptr<Label>&& obj) { return *labels.objects.emplace_back(std::move(obj)); }
+
+GLFWwindow* MyApp::create_window(const char* title, const unsigned int w, const unsigned int h) {
+    GLFWwindow* out;
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -17,92 +27,68 @@ void MyApp::setup() {
 #endif
 
     // clang-format off
-    window = glfwCreateWindow(
-        SCR_WIDTH,
-        SCR_HEIGHT,
+    out = glfwCreateWindow(
+        w,
+        h,
         title,
         nullptr,
         nullptr
     );
     // clang-format on
 
-    if(!window) {
-        printf(LOAD_WINDOW_ERROR_MSG);
-        glfwTerminate();
-        return;
-    }
+    if(!out) printf(LOAD_WINDOW_ERROR_MSG);
 
+    return out;
+}
+
+MyApp::MyApp(GLFWwindow*&& window, const char* app_title)
+    : window(window), title(app_title ? app_title : glfwGetWindowTitle(window)), labels(resource_manager) {
+    glfwGetFramebufferSize(window, &SCR_WIDTH, &SCR_HEIGHT);
+    camera.set_dimensions(SCR_WIDTH, SCR_HEIGHT);
     // store this instance so static callbacks can access it
     glfwSetWindowUserPointer(window, this);
 
-    glfwMakeContextCurrent(window);
-
-    glfwGetFramebufferSize(window, &SCR_WIDTH, &SCR_HEIGHT);
-
-    glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height) {
-        glViewport(0, 0, width, height);
-        MyApp* app = static_cast<MyApp*>(glfwGetWindowUserPointer(window));
+    glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int w, int h) {
+        glViewport(0, 0, w, h);
+        MyApp*&& app = static_cast<MyApp*>(glfwGetWindowUserPointer(window));
         if(!app) return;
+        app->camera.set_dimensions(w, h);
     });
-    // glfwSetKeyCallback(window, key_callback);
+    glfwSetKeyCallback(window, key_callback);
 
-    if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        printf("!gladLoadGLLoader():%s\n", INIT_GLAD_ERROR_MSG);
-        return;
-    }
     glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-
-// Text& MyApp::create_text(const char* text, const char* font_path, glm::vec3 position, float font_size, float scale, glm::vec3 color) {
-//     texts.emplace_back(std::make_unique<Text>(text, font_path, position, font_size, scale, SCR_WIDTH, SCR_HEIGHT, color));
-//     return *texts.back();
-// }
-
-
-// void MyApp::render_text() {
-//     for(const auto& text_ptr : texts)
-//         if(text_ptr) text_ptr->render();
-// }
-
-
-// void MyApp::modify_text(Text& text, const char* new_text, const char* new_font_path, std::optional<glm::vec3> position, std::optional<float> font_size,
-//                         std::optional<float> scale, std::optional<glm::vec3> color) {
-//     text.setText(new_text ? std::string(new_text) : text.getText());
-// }
-
-
-void MyApp::init() { setup(); }
-
-
 // TODO: Input system
 void MyApp::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-    else if(action == GLFW_PRESS || action == GLFW_REPEAT)
-        printf("Key %d pressed\n", key);
-    MyApp*&& p_app = static_cast<MyApp*>(glfwGetWindowUserPointer(window));
-    if(!p_app) return;
-    // Text* text = p_app->texts.empty() ? nullptr : p_app->texts[1].get();
-    // if(text) text->setText("Key " + std::to_string(key) + " pressed");
+    else if(action == GLFW_PRESS)
+        printf("Key %d just pressed\n", key);
+
+    if(MyApp*&& p_app = static_cast<MyApp*>(glfwGetWindowUserPointer(window))) {
+        if(p_app->labels.objects.size() >= 3) (*std::next(p_app->labels.objects.begin(), 2))->set_text("Key " + std::to_string(key) + " just pressed");
+    }
 }
 
 
 void MyApp::run(const std::function<void()>& on_update) {
-    if(!window) init();
+    // if(!window) init();
+    if(!window) printf("MyApp::window == nullptr\n");
     // Player player(SCR_WIDTH, SCR_HEIGHT, window, glm::vec3{100.0f, 200.0f, 0.0f});
     while(!glfwWindowShouldClose(window)) {
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        float currentFrame = glfwGetTime();
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
+        timeNow = glfwGetTime();
+        deltaTime = timeNow - lastFrame;
+        lastFrame = timeNow;
         if(on_update) on_update();
 
         // player.update(deltaTime);
-        // render_text();
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        const glm::mat4x4&& VP = camera.get_view_projection();
+        labels.draw(VP);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
