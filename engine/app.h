@@ -65,8 +65,8 @@ public:
     float get_delta() const { return deltaTime; }
     float get_time() const { return timeNow; }
     Label& push_label(std::unique_ptr<Label>&& obj);
-    Label& emplace_label(const char* text, const char* font_name, const glm::vec2& pos = {0.0, 0.0}, const float& height = 36,
-                                         const glm::vec3& color = {1.0, 1.0, 1.0});
+    Label& emplace_label(const char* text, const char* font_name, const Label::Alignment alignment = Label::Alignment::LEFT, const glm::vec2& pos = {0.0, 0.0},
+                         const float& height = 36, const glm::vec3& color = {1.0, 1.0, 1.0});
     // user should load OpenGL on their own
     static GLFWwindow* create_window(const char* title, const unsigned int w, const unsigned int h);
 

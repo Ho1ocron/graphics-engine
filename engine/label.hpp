@@ -16,10 +16,11 @@ public:
     unsigned int _len;
 
     glm::vec2 pos{};
+    glm::vec3 color{1.0, 1.0, 1.0};
 
     struct CharVertex {
-        glm::vec2 pos = {0.0, 0.0};
-        glm::vec2 tex_pos = {0.0, 0.0};
+        glm::vec2 pos;
+        glm::vec2 tex_pos;
     };
     struct SingleCharacter {
         CharVertex top_left;      // 0
@@ -29,12 +30,15 @@ public:
     };
     constexpr static size_t VERTICES_COUNT = 4;
     constexpr static size_t INDICES_COUNT = 6;  // 6 indices for 4 vertices
+    // KEEP_OLD is used in set_text() to not use std::optional
+    enum class Alignment : char { LEFT, MIDDLE, RIGHT, KEEP_OLD };
+
+
 private:
+    Alignment _alignment;
     glm::mat4x4 get_model() const;
 
 public:
-    glm::vec3 color{1.0, 1.0, 1.0};
-
     struct StaticResources {
         const std::shared_ptr<Shader> shader;
 
@@ -50,14 +54,14 @@ public:
 
 public:
     // refills VBO and EBO, so please do not use frequently
-    Label& set_text(const char* buf, const size_t& len);
-    Label& set_text(const std::string_view& str);
+    Label& set_text(const char* buf, const size_t& len, const Alignment alignment = Alignment::KEEP_OLD);
+    Label& set_text(const std::string_view& str, const Alignment alignment = Alignment::KEEP_OLD);
     Label& set_color(const glm::vec3& color);
     Label& set_pos(const glm::vec2& pos);
 
     void draw(const StaticResources& res, const glm::mat4x4 VP) const;
-    Label(const std::shared_ptr<FontAtlas>& font, const glm::vec2& pos = {0.0, 0.0}, const glm::vec3& color = {1.0, 1.0, 1.0}, const char* buf = nullptr,
-          const size_t len = 0);
+    Label(const std::shared_ptr<FontAtlas>& font, const glm::vec2& pos = {0.0, 0.0}, const glm::vec3& color = {1.0, 1.0, 1.0},
+          const Alignment alignment = Alignment::LEFT, const char* buf = nullptr, const size_t len = 0);
 };
 
 #endif

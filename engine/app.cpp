@@ -9,8 +9,9 @@
 // #include "player/player.h"
 
 
-Label& MyApp::emplace_label(const char* text, const char* font, const glm::vec2& pos, const float& height, const glm::vec3& color) {
-    return *labels.objects.emplace_back(std::make_unique<Label>(resource_manager.get_font(font, height), pos, color, text));
+Label& MyApp::emplace_label(const char* text, const char* font_name, const Label::Alignment alignment, const glm::vec2& pos, const float& height,
+                            const glm::vec3& color) {
+    return *labels.objects.emplace_back(std::make_unique<Label>(resource_manager.get_font(font_name, height), pos, color, alignment, text));
 }
 Label& MyApp::push_label(std::unique_ptr<Label>&& obj) { return *labels.objects.emplace_back(std::move(obj)); }
 
