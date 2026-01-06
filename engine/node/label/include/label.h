@@ -1,13 +1,13 @@
 #ifndef LABEL_HPP
 #define LABEL_HPP
 
+#include <font.h>
+#include <resource_manager.h>
+#include <shader.h>
+
 #include <glm/ext/vector_float3.hpp>
 #include <memory>
 #include <string_view>
-
-#include "font.h"
-#include "resource_manager.h"
-#include "shader.h"
 
 class Label {
 public:

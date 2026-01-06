@@ -1,11 +1,11 @@
 #include "app.h"
 
+#include <font.h>
+#include <label.h>
+#include <resource_manager.h>
+
 #include <iterator>
 #include <memory>
-
-#include "font.cpp"
-#include "label.cpp"
-#include "resource_manager.cpp"
 // #include "player/player.h"
 
 

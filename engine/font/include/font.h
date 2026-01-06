@@ -1,10 +1,10 @@
 #ifndef FONT_H
 #define FONT_H
-#include <array>
+#include <texture.h>
 
-#include "glm/ext/vector_float2.hpp"
-#include "glm/ext/vector_int2.hpp"
-#include "texture.cpp"
+#include <array>
+#include <glm/ext/vector_float2.hpp>
+#include <glm/ext/vector_int2.hpp>
 
 // TODO: ignore first unprintable characters
 // TODO: add languages

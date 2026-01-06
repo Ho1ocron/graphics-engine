@@ -1,14 +1,14 @@
 #ifndef RESOURCE_MANAGER_H
 #define RESOURCE_MANAGER_H
 
+#include <constants.h>
+#include <font.h>
+#include <shader.h>
+
 #include <map>
 #include <memory>
 #include <string_view>
 #include <utility>
-
-#include "font.h"
-#include "shader.h"
-#include "shader_paths.hpp"
 
 inline constexpr decltype(std::ignore) preload{};
 

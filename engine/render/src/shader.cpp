@@ -6,11 +6,10 @@
 
 #include <fstream>
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include <sstream>
 #include <string>
-
-#include "glm/gtc/type_ptr.hpp"
 
 // utility function for checking shader compilation/linking errors.
 void _checkCompileErrors(const GLuint id, const std::string &type) {
@@ -53,8 +52,7 @@ GLuint _compileShader(const char *src, const GLuint type) {
     return id;
 }
 
-// constructor generates the shader on the fly
-// ------------------------------------------------------------------------
+// constructor creates and compiles the shader on the fly
 Shader::Shader(const char *vertexPath, const char *fragmentPath, const char *geometryPath) {
     // 1. retrieve the vertex/fragment source code from filePath
     std::string vertexCode, fragmentCode, geometryCode;

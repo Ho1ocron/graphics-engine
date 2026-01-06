@@ -1,12 +1,9 @@
 #ifndef RESOURCE_MANAGER_CPP
 #define RESOURCE_MANAGER_CPP
-#include "resource_manager.h"
-
+#include <resource_manager.h>
 #include <shader.h>
 
-#include <cstdio>
 #include <string>
-
 
 [[nodiscard("Are you preloading resources? Use preload = get_font() then")]]
 std::shared_ptr<FontAtlas> ResourceManager::get_font(const std::string_view& name, const unsigned int size) {

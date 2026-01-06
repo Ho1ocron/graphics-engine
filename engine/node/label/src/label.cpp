@@ -1,13 +1,11 @@
 #ifndef LABEL_CPP
 #define LABEL_CPP
 
-#include "label.hpp"
+#include <label.h>
 
 #include <cstdio>
 #include <cstring>
-#include <string_view>
 
-Label& Label::set_text(const std::string_view& str, const Alignment alignment) { return set_text(str.data(), str.size(), alignment); }
 // TODO: lazy buffers updating
 Label& Label::set_text(const char* buf, const size_t& len, const Alignment alignment) {
     if(alignment != Alignment::KEEP_OLD) _alignment = alignment;
@@ -24,9 +22,6 @@ Label& Label::set_text(const char* buf, const size_t& len, const Alignment align
     for(unsigned int c = 0; c < len; c++) {
         const auto& c_font = _font->get_char(buf[c]);
         SingleCharacter& c_data = vertices[c];
-        // const float&& w = _font->get_texture().w();
-        // const float&& h = _font->get_texture().h();
-        // const float&& font_h = _font->get_height();
 
         unsigned int align_px = 0;
         switch(_alignment) {
@@ -54,30 +49,8 @@ Label& Label::set_text(const char* buf, const size_t& len, const Alignment align
 
 
         x_px += (c_font.Advance >> 6);
-        // x_px += c_font.size.x;
     }
-    // for(unsigned int c = 0; c < len; c++) {
-    //     SingleCharacter& c_data = vertices[c];
-    //     const auto& c_font = _font->get_char(buf[c]);
-    //     const float&& w = _font->get_texture().w();
-    //     const float&& h = _font->get_texture().h();
-    //     const float&& font_h = _font->get_height();
 
-    //     // clang-format off
-    //     c_data.top_left.pos         = {(x_px+c_font.offset.x), c_font.size.y-c_font.offset.y};
-    //     c_data.top_left.tex_pos     = {c_font.top_left.x, c_font.top_left.y};
-    //     c_data.top_right.pos        = {(x_px+c_font.size.x+c_font.offset.x), c_font.size.y-c_font.offset.y};
-    //     c_data.top_right.tex_pos    = {c_font.bottom_right.x, c_font.top_left.y};
-    //     c_data.bottom_left.pos      = {(x_px+c_font.offset.x), -c_font.offset.y};
-    //     c_data.bottom_left.tex_pos  = {c_font.top_left.x, c_font.bottom_right.y};
-    //     c_data.bottom_right.pos     = {(x_px+c_font.size.x+c_font.offset.x), -c_font.offset.y};
-    //     c_data.bottom_right.tex_pos = {c_font.bottom_right.x, c_font.bottom_right.y};
-    //     // clang-format on
-
-
-    //     x_px += (c_font.Advance >> 6);
-    //     // x_px += c_font.size.x;
-    // }
     // fill EBO
     for(unsigned int i = 0, v = 0; i < INDICES_COUNT * len; i += INDICES_COUNT, v += VERTICES_COUNT) {
         indices[i + 0] = v + 0;  // top_left
@@ -101,6 +74,8 @@ Label& Label::set_text(const char* buf, const size_t& len, const Alignment align
     delete[] indices;
     return *this;
 }
+Label& Label::set_text(const std::string_view& str, const Alignment alignment) { return set_text(str.data(), str.size(), alignment); }
+
 Label& Label::set_color(const glm::vec3& color) {
     this->color = color;
     return *this;
@@ -141,17 +116,6 @@ void Label::draw(const StaticResources& res, const glm::mat4x4 VP) const {
 
 glm::mat4x4 Label::get_model() const {
     glm::mat4x4 out{1.0f};
-    // set position
-    // switch (_alignment) {
-    //     case Alignment::KEEP_OLD:
-    //     case Alignment::LEFT:
-    //         out[3][0] = pos.x-;
-    //         break;
-    //     case Alignment::MIDDLE:
-    //         break;
-    //     case Alignment::RIGHT:
-    //         break;
-    // }
     out[3][0] = pos.x;
     out[3][1] = pos.y;
     out[3][2] = 0.0f;

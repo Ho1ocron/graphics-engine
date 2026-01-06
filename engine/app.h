@@ -6,16 +6,16 @@
 // thank you
 
 #include <ft2build.h>
+#include <label.h>
+#include <resource_manager.h>
 
 #include <functional>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <list>
 #include <memory>
 
 #include "camera.cpp"
-#include "label.hpp"
 #include FT_FREETYPE_H
 
 

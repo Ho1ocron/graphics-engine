@@ -1,17 +1,9 @@
 #ifndef FONT_CPP
 #define FONT_CPP
-#include "font.h"
-
-#include <array>
-#include <cstring>
-
-#include "app.h"
-#include "constants.h"
-#include "font.h"
-#include "freetype/freetype.h"
-#include "glm/ext/vector_float2.hpp"
-#include "glm/ext/vector_int2.hpp"
-#include "texture.cpp"
+#include <constants.h>
+#include <font.h>
+#include <freetype/freetype.h>
+#include <texture.h>
 
 // not in constructor because of Texture(const Texture&) = delete;
 Texture FontAtlas::init_atlas(const char* path, const unsigned int& height) {
@@ -61,7 +53,7 @@ Texture FontAtlas::init_atlas(const char* path, const unsigned int& height) {
 
         Character character;
         character.size = {cw, ch};
-        character.offset = {face->glyph->bitmap_left, ch-face->glyph->bitmap_top};
+        character.offset = {face->glyph->bitmap_left, ch - face->glyph->bitmap_top};
         character.Advance = face->glyph->advance.x;
         character.top_left = {float(x) / float(w), 0.0f};
         character.bottom_right = {float(x + cw) / float(w), float(ch) / float(h)};
