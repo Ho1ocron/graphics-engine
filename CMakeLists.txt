@@ -18,27 +18,27 @@ add_executable(graphics-engine
 )
 
 # third-party libs
-add_subdirectory(glfw/)
-add_subdirectory(freetype/)
-add_subdirectory(glm/)
+add_subdirectory(libs/glfw/)
+add_subdirectory(libs/freetype/)
+add_subdirectory(libs/glm/)
 add_library(glad STATIC
-    glad/src/glad.c
+    libs/glad/src/glad.c
 )
 target_include_directories(glad
-    PUBLIC glad/include/
+    PUBLIC libs/glad/include/
 )
 # our code
-add_subdirectory(engine/math/)
-add_subdirectory(engine/render/)
-add_subdirectory(engine/font/)
-add_subdirectory(engine/resource_manager/)
-add_subdirectory(engine/node/)
+add_subdirectory(core/math/)
+add_subdirectory(core/render/)
+add_subdirectory(core/font/)
+add_subdirectory(core/resource_manager/)
+add_subdirectory(core/node/)
 
 add_library(globals INTERFACE
-    engine/constants.h
+    core/constants.h
 )
 target_include_directories(globals PUBLIC
-    INTERFACE engine/
+    INTERFACE core/
 )
 
 target_link_libraries(graphics-engine PUBLIC
