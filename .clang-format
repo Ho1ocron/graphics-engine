@@ -6,7 +6,7 @@ NamespaceIndentation: All
 ColumnLimit: 160
 PenaltyBreakAssignment: 2
 PenaltyReturnTypeOnItsOwnLine: 200
-PointerAlignment: Down
+PointerAlignment: Left
 SpaceBeforeParens: Never
 AccessModifierOffset: -4
 AllowShortBlocksOnASingleLine: Always
