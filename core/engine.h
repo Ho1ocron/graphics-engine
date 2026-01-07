@@ -40,14 +40,20 @@ namespace GF_Engine {
     class Engine {
     private:
         Camera camera{};
+        GLFWwindow* window = nullptr;
+
+        ResourceManager resource_manager{"core/assets/shaders/", "assets/fonts/"};
 
         float deltaTime = 0.0f;
         float timeNow = 0.0f;
         float lastFrame = 0.0f;
 
+        const char* title;
+
         ResourceManager resource_manager{"core/assets/shaders/", "assets/fonts/"};
 
     public:
+        DrawableContainer<Label> labels;
         static GLFWwindow* create_window(const char* title, const unsigned int w, const unsigned int h) {
             glfwInit();
             GLFWwindow* out;
@@ -75,7 +81,25 @@ namespace GF_Engine {
             return out;
         }
 
-        Engine(GLFWwindow*&& window, const char* app_title) {}
+        Engine(GLFWwindow*&& window, const char* app_title)
+            : window(window), title(app_title ? app_title : glfwGetWindowTitle(window)), labels(resource_manager) {
+            glfwGetFramebufferSize(window, &SCR_WIDTH, &SCR_HEIGHT);
+            camera.set_dimensions(SCR_WIDTH, SCR_HEIGHT);
+            // store this instance so static callbacks can access it
+            glfwSetWindowUserPointer(window, this);
+
+            glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int w, int h) {
+                glViewport(0, 0, w, h);
+                MyApp*&& app = static_cast<MyApp*>(glfwGetWindowUserPointer(window));
+                if(!app) return;
+                app->camera.set_dimensions(w, h);
+            });
+            glfwSetKeyCallback(window, key_callback);
+
+            glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        }
 
         float get_delta() const { return deltaTime; }
         float get_time() const { return timeNow; }
