@@ -10,9 +10,14 @@ target_link_libraries(label PUBLIC
     resource_manager
 )
 
+
 add_library(camera STATIC
     camera/include/camera.h
     camera/src/camera.cpp
+)
+
+target_link_libraries(camera PUBLIC
+    glm
 )
 target_include_directories(camera
     PUBLIC camera/include/
