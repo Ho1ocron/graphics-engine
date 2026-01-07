@@ -15,14 +15,17 @@ project(graphics-engine)
 
 add_executable(app
     test_app/main.cpp
-    test_app/app.cpp
+    # test_app/app.cpp
 )
 
 # include the engine
 add_subdirectory(core/)
 add_library(globals INTERFACE test_app/constants.h)
 target_include_directories(globals PUBLIC INTERFACE test_app/)
-
+add_library(engine INTERFACE)                  # INTERFACE = header-only
+target_include_directories(engine
+    INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/core  # directory containing engine.h
+)
 target_link_libraries(app PUBLIC
     glfw
     glad
@@ -35,6 +38,7 @@ target_link_libraries(app PUBLIC
     label
     camera
     globals
+    engine
 )
 add_custom_target(copy_assets
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/assets ${CMAKE_CURRENT_BINARY_DIR}/assets

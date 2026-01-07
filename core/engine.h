@@ -18,6 +18,8 @@
 #include <memory>
 #include FT_FREETYPE_H
 
+#define CLOSE_WINDOW glfwWindowShouldClose
+#define CLOSE_APP glfwTerminate
 
 template <class T>
 struct DrawableContainer {
@@ -49,8 +51,7 @@ namespace GF_Engine {
         float lastFrame = 0.0f;
 
         const char* title;
-
-        ResourceManager resource_manager{"core/assets/shaders/", "assets/fonts/"};
+        int SCR_WIDTH, SCR_HEIGHT;
 
     public:
         DrawableContainer<Label> labels;
@@ -80,6 +81,7 @@ namespace GF_Engine {
 
             return out;
         }
+        GLFWwindow* get_window() { return window; }
 
         Engine(GLFWwindow*&& window, const char* app_title)
             : window(window), title(app_title ? app_title : glfwGetWindowTitle(window)), labels(resource_manager) {
@@ -90,15 +92,35 @@ namespace GF_Engine {
 
             glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int w, int h) {
                 glViewport(0, 0, w, h);
-                MyApp*&& app = static_cast<MyApp*>(glfwGetWindowUserPointer(window));
+                Engine*&& app = static_cast<Engine*>(glfwGetWindowUserPointer(window));
                 if(!app) return;
                 app->camera.set_dimensions(w, h);
             });
-            glfwSetKeyCallback(window, key_callback);
 
             glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        }
+
+        void set_background(glm::vec3 color);
+
+        void run() {
+            if(!window) printf("MyApp::window == nullptr\n");
+            // Player player(SCR_WIDTH, SCR_HEIGHT, window, glm::vec3{100.0f, 200.0f, 0.0f});
+            timeNow = glfwGetTime();
+            deltaTime = timeNow - lastFrame;
+            lastFrame = timeNow;
+
+            // player.update(deltaTime);
+            glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT);
+            const glm::mat4x4&& VP = camera.get_view_projection();
+            labels.draw(VP);
+
+            glfwSwapBuffers(window);
+            glfwPollEvents();
+
+            // glfwTerminate();
         }
 
         float get_delta() const { return deltaTime; }
