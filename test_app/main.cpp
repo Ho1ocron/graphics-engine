@@ -11,10 +11,12 @@
 
 
 int main() {
+#ifdef __linux__
     std::filesystem::current_path(std::filesystem::canonical("/proc/self/exe").parent_path());
     printf("path: %s\n", std::filesystem::current_path().c_str());
+#endif
     glfwInit();
-    GLFWwindow *&&window = MyApp::create_window("[LOADING] Text Rendering", 800, 600);
+    GLFWwindow*&& window = MyApp::create_window("[LOADING] Text Rendering", 800, 600);
     if(!window) {
         glfwTerminate();
         return 1;
