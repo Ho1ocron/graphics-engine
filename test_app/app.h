@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 // thank you
 
+#include <camera.h>
 #include <ft2build.h>
 #include <label.h>
 #include <resource_manager.h>
@@ -14,8 +15,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <memory>
-
-#include "camera.cpp"
 #include FT_FREETYPE_H
 
 
@@ -43,7 +42,7 @@ private:
 
     GLFWwindow* window = nullptr;
 
-    ResourceManager resource_manager{};
+    ResourceManager resource_manager{"core/assets/shaders/", "assets/fonts/"};
 
     // std::vector<std::unique_ptr<Label>> labels;
     // Label::StaticResources label_static_resources;

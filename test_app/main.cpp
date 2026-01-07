@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 // thank you
 #include <cmath>
+#include <filesystem>
 #include <string>
 #include <string_view>
 
@@ -10,6 +11,8 @@
 
 
 int main() {
+    std::filesystem::current_path(std::filesystem::canonical("/proc/self/exe").parent_path());
+    printf("path: %s\n", std::filesystem::current_path().c_str());
     glfwInit();
     GLFWwindow *&&window = MyApp::create_window("[LOADING] Text Rendering", 800, 600);
     if(!window) {

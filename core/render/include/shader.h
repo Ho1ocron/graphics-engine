@@ -1,6 +1,7 @@
 #ifndef SHADER_H
 #define SHADER_H
 #include <glm/glm.hpp>
+#include <string_view>
 
 
 class Shader {
@@ -21,7 +22,8 @@ public:
     void use() const;
 
 public:
-    Shader(const char *vertexPath, const char *fragmentPath, const char *geometryPath = nullptr);
+    // Shader(const char *vertexPath, const char *fragmentPath, const char *geometryPath = nullptr);
+    Shader(const std::string_view& vertexPath, const std::string_view& fragmentPath, const std::string_view& geometryPath = "");
 
 public:
     unsigned int getId() const { return ID; }

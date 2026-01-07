@@ -7,7 +7,9 @@
 #include <fstream>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <ios>
 #include <iostream>
+#include <iterator>
 #include <sstream>
 #include <string>
 
@@ -51,58 +53,44 @@ GLuint _compileShader(const char *src, const GLuint type) {
     _checkCompileErrors(id, type);
     return id;
 }
+std::string _loadFile(const char *path) {
+    std::ifstream ifs{path};
+    ifs.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+    return {(std::istreambuf_iterator(ifs)), (std::istreambuf_iterator<char>())};
+}
 
 // constructor creates and compiles the shader on the fly
-Shader::Shader(const char *vertexPath, const char *fragmentPath, const char *geometryPath) {
+// Shader::Shader(const char *vertexPath, const char *fragmentPath, const char *geometryPath) {
+Shader::Shader(const std::string_view &vertexPath, const std::string_view &fragmentPath, const std::string_view &geometryPath) {
+    const bool _geometry = !geometryPath.empty();
     // 1. retrieve the vertex/fragment source code from filePath
     std::string vertexCode, fragmentCode, geometryCode;
-    std::ifstream vShaderFile, fShaderFile, gShaderFile;
-    // ensure ifstream objects can throw exceptions:
-    vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-    fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-    gShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     try {
-        // open files
-        vShaderFile.open(vertexPath);
-        fShaderFile.open(fragmentPath);
-        std::stringstream vShaderStream, fShaderStream;
-        // read file's buffer contents into streams
-        vShaderStream << vShaderFile.rdbuf();
-        fShaderStream << fShaderFile.rdbuf();
-        // close file handlers
-        vShaderFile.close();
-        fShaderFile.close();
-        // convert stream into string
-        vertexCode = vShaderStream.str();
-        fragmentCode = fShaderStream.str();
-        // if geometry shader path is present, also load a geometry shader
-        if(geometryPath != nullptr) {
-            gShaderFile.open(geometryPath);
-            std::stringstream gShaderStream;
-            gShaderStream << gShaderFile.rdbuf();
-            gShaderFile.close();
-            geometryCode = gShaderStream.str();
-        }
-    } catch(std::ifstream::failure &e) { std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ: " << e.what() << std::endl; }
+        vertexCode = _loadFile(vertexPath.data());
+        fragmentCode = _loadFile(fragmentPath.data());
+        if(_geometry) geometryCode = _loadFile(geometryPath.data());
+    } catch(std::ifstream::failure &e) {
+        std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ: " << e.what() << " " << e.code() << " (" << vertexPath << " " << fragmentPath << " "
+                  << geometryPath << " " << ")" << std::endl;
+    }
     // 2. compile shaders
     unsigned int vertex, fragment, geometry;
     vertex = _compileShader(vertexCode.c_str(), GL_VERTEX_SHADER);
     fragment = _compileShader(fragmentCode.c_str(), GL_FRAGMENT_SHADER);
-    // if geometry shader is given, compile geometry shader
-    if(geometryPath != nullptr) geometry = _compileShader(geometryCode.c_str(), GL_GEOMETRY_SHADER);
+    if(_geometry) geometry = _compileShader(geometryCode.c_str(), GL_GEOMETRY_SHADER);
 
     // shader Program
     ID = glCreateProgram();
     glAttachShader(ID, vertex);
     glAttachShader(ID, fragment);
-    if(geometryPath != nullptr) glAttachShader(ID, geometry);
+    if(_geometry) glAttachShader(ID, geometry);
     glLinkProgram(ID);
     _checkCompileErrors(ID, "PROGRAM");
     // delete the shaders as they're linked into our program now and no longer
     // necessary
     glDeleteShader(vertex);
     glDeleteShader(fragment);
-    if(geometryPath != nullptr) glDeleteShader(geometry);
+    if(_geometry) glDeleteShader(geometry);
 }
 
 void Shader::use() const { glUseProgram(ID); }

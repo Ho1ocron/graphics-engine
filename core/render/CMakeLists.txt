@@ -9,6 +9,6 @@ target_include_directories(render
 )
 target_link_libraries(render PUBLIC
     glad
-    globals
+    core_globals
     glm
 )

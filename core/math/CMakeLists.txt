@@ -5,5 +5,3 @@ add_library(math STATIC
 target_include_directories(math
     PUBLIC include/
 )
-# target_link_libraries(math STATIC
-# )

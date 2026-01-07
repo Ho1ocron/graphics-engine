@@ -1,6 +1,6 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
-#include <constants.h>
+#include <core_constants.h>
 #include <glad/glad.h>
 
 class Texture {

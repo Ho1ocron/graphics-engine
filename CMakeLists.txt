@@ -7,41 +7,23 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(graphics-engine)
 
-add_compile_definitions(
-    SHADER_DIR="assets/shaders/"
-    FONT_DIR="assets/fonts/"
+# see constants.h (core/constants/core_constants.h and test_app/constants.h)
+# add_compile_definitions(
+#   # SHADER_DIR="assets/shaders/"
+#   # FONT_DIR="assets/fonts/"
+# )
+
+add_executable(app
+    test_app/main.cpp
+    test_app/app.cpp
 )
 
-add_executable(graphics-engine
-    engine/main.cpp
-    engine/app.cpp
-)
+# include the engine
+add_subdirectory(core/)
+add_library(globals INTERFACE test_app/constants.h)
+target_include_directories(globals PUBLIC INTERFACE test_app/)
 
-# third-party libs
-add_subdirectory(libs/glfw/)
-add_subdirectory(libs/freetype/)
-add_subdirectory(libs/glm/)
-add_library(glad STATIC
-    libs/glad/src/glad.c
-)
-target_include_directories(glad
-    PUBLIC libs/glad/include/
-)
-# our code
-add_subdirectory(core/math/)
-add_subdirectory(core/render/)
-add_subdirectory(core/font/)
-add_subdirectory(core/resource_manager/)
-add_subdirectory(core/node/)
-
-add_library(globals INTERFACE
-    core/constants.h
-)
-target_include_directories(globals PUBLIC
-    INTERFACE core/
-)
-
-target_link_libraries(graphics-engine PUBLIC
+target_link_libraries(app PUBLIC
     glfw
     glad
     freetype
@@ -51,4 +33,11 @@ target_link_libraries(graphics-engine PUBLIC
     resource_manager
     font
     label
+    camera
+    globals
 )
+add_custom_target(copy_assets
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/assets ${CMAKE_CURRENT_BINARY_DIR}/assets
+)
+add_dependencies(app copy_assets)
+add_dependencies(app copy_core_assets)
