@@ -17,3 +17,5 @@ add_library(camera STATIC
 target_include_directories(camera
     PUBLIC camera/include/
 )
+
+target_link_libraries(camera PUBLIC glm)
