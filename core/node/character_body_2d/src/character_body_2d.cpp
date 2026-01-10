@@ -2,7 +2,7 @@
 
 
 void CharacterBody2D::updateSprite(unsigned int width, unsigned int height) {
-    sprite->update(position, width, height);
+    sprite->update(1, position, width, height);
     sprite->draw();
 }
 

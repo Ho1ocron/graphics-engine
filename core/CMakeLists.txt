@@ -23,13 +23,26 @@ target_include_directories(glad
 
 # our code
 add_library(core_globals INTERFACE constants/core_constants.h)
+
+add_library(engine STATIC 
+    src/engine.cpp
+    include/
+)
+
+
 target_include_directories(core_globals PUBLIC INTERFACE constants/)
 add_subdirectory(math/)
 add_subdirectory(render/)
 add_subdirectory(font/)
 add_subdirectory(resource_manager/)
+add_subdirectory(core_structure/)
 add_subdirectory(node/)
-
 add_custom_target(copy_core_assets
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/assets ${CMAKE_CURRENT_BINARY_DIR}/assets
+COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/assets ${CMAKE_CURRENT_BINARY_DIR}/assets
 )
+
+# target_link_libraries(engine PUBLIC
+#     drawable
+#     glm
+#     glad
+# )

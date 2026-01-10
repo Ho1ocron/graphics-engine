@@ -19,26 +19,36 @@
 #include <memory>
 #include FT_FREETYPE_H
 
-#define CLOSE_WINDOW glfwWindowShouldClose
-#define CLOSE_APP glfwTerminate
-
 
 namespace GF_Engine {
 
     class Engine {
     private:
         int screen_width, screen_height;
+
+        const char* window_name;
+        const char* app_name;
+
+        glm::vec3 bg_color;
+
+
         GLFWwindow* window;
 
     public:
         void init();
         void update();
 
-        std::shared_ptr<Drawable2D> create_object(const Drawable& obj);
-        void delete_object(const std::shadre_ptr<Drawable2D>& obj) { obj.reset(); }
+        std::shared_ptr<Drawable2D> createObject(const Drawable2D& obj);
+        void draw(std::shared_ptr<Drawable2D> obj);
+        void deleteObject(std::shared_ptr<Drawable2D> obj) { obj.reset(); }
 
-        Engine();
+        void setBGColor(const glm::vec3& new_color);
+        glm::vec3 getBGColor();
+
+        Engine(const char* name, const int& screen_width, const int& screen_height, const glm::vec3& bg_color = {0.0f, 0.0f, 0.0f});
         ~Engine() = default;
     };
 
 }  // namespace GF_Engine
+
+#endif

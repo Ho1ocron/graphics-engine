@@ -1,5 +1,7 @@
 #pragma once
 
+#include <collision_body.h>
+#include <drawable2d.h>
 #include <glad/glad.h>
 #include <stdio.h>
 
@@ -8,9 +10,7 @@
 #include <type_traits>
 #include <variant>
 
-#include "collision_body.h"
 #include "collision_shape_2d.h"
-#include "drawable2d.h"
 
 
 // template<class Drawable2D>

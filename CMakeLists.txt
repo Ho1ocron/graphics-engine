@@ -22,8 +22,7 @@ add_executable(app
 # include the engine
 add_subdirectory(core/)
 add_library(globals INTERFACE test_app/constants.h)
-target_include_directories(globals PUBLIC INTERFACE test_app/)
-add_library(engine INTERFACE)                  # INTERFACE = header-only
+target_include_directories(globals PUBLIC INTERFACE test_app/)              
 target_include_directories(engine
     INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/core/include/GF_ENGINE  # directory containing engine.h
 )
@@ -39,6 +38,7 @@ target_link_libraries(app PUBLIC
     label
     camera
     globals
+    drawable
     engine
 )
 add_custom_target(copy_assets

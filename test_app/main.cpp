@@ -16,10 +16,5 @@ int main() {
     std::filesystem::current_path(std::filesystem::canonical("/proc/self/exe").parent_path());
     printf("path: %s\n", std::filesystem::current_path().c_str());
 #endif
-    GLFWwindow*&& window = GF_Engine::Engine::create_window("My app", 800, 600);
-
-    GF_Engine::Engine App(std::move(window));
-    while(CLOSE_WINDOW(App.get_window())) { App.run(); }
-    CLOSE_APP();
     return 0;
 }
