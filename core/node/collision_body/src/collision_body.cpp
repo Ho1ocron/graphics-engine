@@ -1,12 +1,6 @@
 #include "collision_body.h"
 
 
-void CollisionBody::update(float delta_time) {
-    velocity += acceleration * delta_time;
-    position += velocity * delta_time;
-}
-
-
 void CollisionBody::setPosition(const glm::vec3& new_position) { position = new_position; }
 glm::vec3 CollisionBody::getPosition() const { return position; }
 

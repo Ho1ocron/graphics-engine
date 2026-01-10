@@ -1,11 +1,12 @@
 #pragma once
 
+#include <drawable2d.h>
 #include <glad/glad.h>
+
 #include <glm/glm.hpp>
 
 
-struct CollisionBody
-{
+struct CollisionBody : Drawable2D {
 protected:
     glm::vec3 position;
     glm::vec3 direction;
@@ -15,14 +16,9 @@ protected:
     glm::vec3 size;
 
 public:
-    CollisionBody(
-        const glm::vec3& position = glm::vec3(0.0f),
-        const glm::vec3& direction = glm::vec3(0.0f),
-        const glm::vec3& velocity = glm::vec3(0.0f),
-        const float& speed = 0.0f,
-        const glm::vec3& acceleration = glm::vec3(0.0f),
-        const glm::vec3& size = glm::vec3(0.0f)
-    ) : position(position), direction(direction), size(size), velocity(velocity), speed(speed), acceleration(acceleration) {}
+    CollisionBody(const glm::vec3& position = glm::vec3(0.0f), const glm::vec3& direction = glm::vec3(0.0f), const glm::vec3& velocity = glm::vec3(0.0f),
+                  const float& speed = 0.0f, const glm::vec3& acceleration = glm::vec3(0.0f), const glm::vec3& size = glm::vec3(0.0f))
+        : position(position), direction(direction), size(size), velocity(velocity), speed(speed), acceleration(acceleration) {}
 
     void setPosition(const glm::vec3& new_position);
     glm::vec3 getPosition() const;
@@ -36,5 +32,7 @@ public:
     void setSize(const glm::vec3& new_size);
     glm::vec3 getSize() const;
 
-    void update(float delta_time);
+    void update(float deltaTime) override;
+
+    void free() override;
 };

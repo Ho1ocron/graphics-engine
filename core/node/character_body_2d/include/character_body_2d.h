@@ -1,21 +1,20 @@
 #pragma once
 
 #include <glad/glad.h>
-#include <glm/glm.hpp>
-
 #include <stdio.h>
-#include <type_traits>
+
+#include <glm/glm.hpp>
 #include <memory>
+#include <type_traits>
 #include <variant>
 
 #include "collision_body.h"
-#include "drawable2d.h"
 #include "collision_shape_2d.h"
+#include "drawable2d.h"
 
 
 // template<class Drawable2D>
-struct CharacterBody2D : public CollisionBody
-{
+struct CharacterBody2D : public CollisionBody {
 protected:
     std::unique_ptr<Drawable2D> sprite;
     std::unique_ptr<CircleCollisionShape2D> hitbox;
