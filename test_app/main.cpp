@@ -3,12 +3,14 @@
 #include <GLFW/glfw3.h>
 // thank you
 #include <cmath>
-#include <filesystem>
 #include <string>
 #include <string_view>
 
+#ifdef __linux__
+#include <filesystem>
+#endif
 // #include "app.h"
-#include "engine.h"
+#include <engine.h>
 
 
 int main() {
