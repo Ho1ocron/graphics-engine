@@ -12,6 +12,8 @@ AccessModifierOffset: -4
 AllowShortBlocksOnASingleLine: Always
 AllowShortFunctionsOnASingleLine: All
 BreakBeforeBraces: Allman
+SpaceAfterControlStatementKeyword: true
+
 # BreakBeforeBraces: Custom
 
 # BraceWrapping:

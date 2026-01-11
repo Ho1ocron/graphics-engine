@@ -32,7 +32,8 @@ int main()
 
     GFE::Text text1("Hello, World!", "assets/fonts/JetBrainsMono-Regular.ttf", {25.0f, 50.0f, 0.0f}, 48.0f, 1.0f, 800, 600, {1.0f, 1.0f, 0.0f});
     text1.getCenter();
-    text1.setPositionOnScreenCenter(engine.get_screen_center());
+    text1.setPositionOnScreenCenter();
+    // text1.setPosition(engine.get_screen_center());
     std::shared_ptr<Drawable2D> text_obj1 = engine.create_object(&text1);
 
     while(!engine.should_quit()) { engine.update(); }
