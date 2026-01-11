@@ -1,21 +1,22 @@
 #pragma once
 
-#include <map>
-#include <string>
-
+#include <ft2build.h>
 #include <glad/glad.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
-#include <ft2build.h>
+#include <map>
+#include <string>
 #include FT_FREETYPE_H
 
-#include "drawable2d.h"
 #include <shader.h>
 
+#include "drawable2d.h"
 
-struct Character {
+
+struct Character
+{
     unsigned int TextureID;
     glm::ivec2 Size;
     glm::ivec2 Bearing;
@@ -23,7 +24,8 @@ struct Character {
 };
 
 
-struct Font {
+struct Font
+{
     std::map<char, Character> characters;
 };
 
@@ -31,15 +33,11 @@ struct Font {
 struct Text : Drawable2D
 {
 public:
-    Text(
-        const char* text, const char* fontPath,
-        glm::vec3 position, float fontSize, float scale, 
-        const unsigned int& screen_width,
-        const unsigned int& screen_height,
-        glm::vec3 color
-    );
+    Text(const char* text, const char* fontPath, glm::vec3 position, float fontSize, float scale, const unsigned int& screen_width,
+         const unsigned int& screen_height, glm::vec3 color);
 
     void render() override;
+    void move();
     void update(const glm::vec3& new_position, const unsigned int& screen_width, const unsigned int& screen_height) override;
 
     // void setScreenSize(const unsigned int& width, const unsigned int& height);

@@ -3,15 +3,6 @@
 
 namespace GF_Engine
 {
-    void Engine::init() {}
-
-
-    void Engine::update() {}
-
-
-    bool Engine::should_quit() { return true; }
-
-
     std::shared_ptr<Drawable2D> Engine::create_object(Drawable2D* obj)
     {
         std::shared_ptr<Drawable2D> ptr{obj};
@@ -30,5 +21,18 @@ namespace GF_Engine
     Engine::Engine(const char* name, const int& screen_width, const int& screen_height, const glm::vec3& bg_color)
         : app_name(name), screen_height(screen_height), screen_width(screen_width), bg_color(bg_color)
     {
+    }
+
+    bool Engine::should_quit() { return true; }
+
+    void Engine::init() {}
+
+    void Engine::update()
+    {
+        for(auto obj : visible_on_screen)
+        {
+            obj->draw();
+            obj->update(deltaTime, screen_width, screen_height);
+        }
     }
 }  // namespace GF_Engine
