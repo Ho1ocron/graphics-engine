@@ -19,13 +19,15 @@
 
 
 template <class T>
-struct DrawableContainer {
+struct DrawableContainer
+{
     using StaticResources = typename T::StaticResources;
 
     std::vector<std::unique_ptr<T>> objects;
     StaticResources draw_resources;
 
-    void draw(const glm::mat4x4& VP) {
+    void draw(const glm::mat4x4& VP)
+    {
         draw_resources.use();
         for(const auto& obj : objects) { obj->draw(draw_resources, VP); }
     }
@@ -35,7 +37,8 @@ struct DrawableContainer {
     DrawableContainer(StaticResources res) : draw_resources(res) {}
 };
 
-class MyApp {
+class MyApp
+{
 private:
     const char* title;
     int SCR_WIDTH, SCR_HEIGHT;

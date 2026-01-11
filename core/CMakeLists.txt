@@ -26,7 +26,21 @@ add_library(core_globals INTERFACE constants/core_constants.h)
 
 add_library(engine STATIC 
     src/engine.cpp
-    include/
+    # include/
+)
+
+target_include_directories(engine PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+target_link_libraries(engine PUBLIC
+    glad
+    glm
+    glfw
+    camera
+    drawable
+    freetype
+    label
 )
 
 

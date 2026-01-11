@@ -15,7 +15,7 @@ project(graphics-engine)
 
 add_executable(app
     test_app/main.cpp
-    core/src/engine.cpp
+    # core/src/engine.cpp
     # test_app/app.cpp
 )
 
