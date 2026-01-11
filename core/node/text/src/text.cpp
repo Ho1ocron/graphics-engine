@@ -104,7 +104,7 @@ namespace GFE
         return glm::vec2(width, height);
     }
 
-    void Text::setPositionOnScreenCenter(const glm::vec2& screen_center)
+    void Text::setPositionOnScreenCenter()
     {
         glm::vec2 text_dimensions = calculateTextDimensions();
         position.x = (screen_width / 2.0f) - (text_dimensions.x / 2.0f);

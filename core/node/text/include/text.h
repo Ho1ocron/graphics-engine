@@ -52,7 +52,7 @@ namespace GFE
         void setPosition(const glm::vec3& new_position) { position = new_position; }
         glm::vec3 getPosition() const { return position; }
 
-        void setPositionOnScreenCenter(const glm::vec2& screen_center);
+        void setPositionOnScreenCenter();
         glm::vec2 getTextCenter() const;
 
         void setFontSize(float new_size) { fontSize = new_size; }
