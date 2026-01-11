@@ -23,7 +23,6 @@
 
 namespace GFE
 {
-
     class Engine
     {
     private:

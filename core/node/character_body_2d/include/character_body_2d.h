@@ -12,17 +12,20 @@
 
 #include "collision_shape_2d.h"
 
+namespace GFE
+{
+    // template<class Drawable2D>
+    struct CharacterBody2D : public CollisionBody
+    {
+    protected:
+        std::unique_ptr<Drawable2D> sprite;
+        std::unique_ptr<CircleCollisionShape2D> hitbox;
 
-// template<class Drawable2D>
-struct CharacterBody2D : public CollisionBody {
-protected:
-    std::unique_ptr<Drawable2D> sprite;
-    std::unique_ptr<CircleCollisionShape2D> hitbox;
+    public:
+        explicit CharacterBody2D(std::unique_ptr<Drawable2D> new_sprite) : sprite(std::move(new_sprite)) {}
 
-public:
-    explicit CharacterBody2D(std::unique_ptr<Drawable2D> new_sprite) : sprite(std::move(new_sprite)) {}
+        void move(float deltaTime, float screen_width, float screen_hight);
 
-    void move(float deltaTime, float screen_width, float screen_hight);
-
-    void updateSprite(unsigned int width, unsigned int height);
-};
+        void updateSprite(unsigned int width, unsigned int height);
+    };
+}  // namespace GFE
