@@ -131,8 +131,8 @@ namespace GFE
         // position = new_position;
         // setScreenSize(screen_width, screen_height);
         // render();
+        printf("Updating text: %s\n", content.c_str());
         draw();
-        return;
     }
 
 
