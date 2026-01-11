@@ -41,7 +41,7 @@ namespace GFE
 
         void render() override;
         void move(const glm::vec3& new_position) override;
-        void update(const glm::vec3& new_position, const unsigned int& screen_width, const unsigned int& screen_height) override;
+        void update(const unsigned int& screen_width, const unsigned int& screen_height) override;
 
         // void setScreenSize(const unsigned int& width, const unsigned int& height);
 

@@ -129,6 +129,7 @@ namespace GFE
         // position = new_position;
         // setScreenSize(screen_width, screen_height);
         // render();
+        return;
     }
 
 
