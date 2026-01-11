@@ -30,7 +30,7 @@ int main()
 
     engine.init();
 
-    GFE::Text text1("text 1", "assets/fonts/JetBrainsMono-Regular.ttf", {25.0f, 50.0f, 0.0f}, 48.0f, 1.0f, 800, 600, {1.0f, 1.0f, 0.0f});
+    GFE::Text text1("text 1", "assets/fonts/JetBrainsMono-Regular.ttf", {25.0f, 50.0f, 0.0f}, 48.0f, 1.0f, 800, 600, {1.0f, 1.0f, 1.0f});
     std::shared_ptr<Drawable2D> text_obj1 = engine.create_object(&text1);
 
     while(!engine.should_quit()) { engine.update(); }
