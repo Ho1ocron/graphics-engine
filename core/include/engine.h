@@ -31,7 +31,7 @@ namespace GFE
         const char* window_name;
         const char* app_name;
 
-        glm::vec3 bg_color;
+        glm::vec4 bg_color;
 
         GLFWwindow* window;
 
@@ -44,10 +44,13 @@ namespace GFE
         std::vector<std::shared_ptr<Drawable2D>> visible_on_screen;
         std::vector<std::shared_ptr<Drawable2D>> hidden_on_screen;
 
+        void draw_objs();
+
     public:
         void init();
         void update();
         bool should_quit();
+        void quit();
 
         std::shared_ptr<Drawable2D> create_object(Drawable2D* obj);
         void draw(std::shared_ptr<Drawable2D> obj);
@@ -56,12 +59,12 @@ namespace GFE
         float get_deltaTime() const { return deltaTime; }
         float get_time() const { return timeNow; }
 
-        void set_bg_color(const glm::vec3& new_color);
-        glm::vec3 get_bg_color() const;
+        void set_bg_color(const glm::vec4& new_color);
+        glm::vec4 get_bg_color() const;
 
         static void print(const char* str);
 
-        Engine(const char* name, const int& screen_width, const int& screen_height, const glm::vec3& bg_color = {0.0f, 0.0f, 0.0f});
+        Engine(const char* name, const int& screen_width, const int& screen_height, const glm::vec4& bg_color = {0.0f, 0.0f, 0.0f, 1.0f});
         ~Engine() = default;
     };
 

@@ -24,9 +24,10 @@ int main()
 
     GFE::Engine engine("My App", 800, 600);
 
-    // engine.init();
+    engine.init();
 
-    // while(engine.shouldQuit()) { engine.update(); }
+    while(!engine.should_quit()) { engine.update(); }
 
+    engine.quit();
     return 0;
 }
