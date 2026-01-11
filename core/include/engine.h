@@ -21,7 +21,7 @@
 #include FT_FREETYPE_H
 
 
-namespace GF_Engine
+namespace GFE
 {
 
     class Engine
@@ -66,6 +66,6 @@ namespace GF_Engine
         ~Engine() = default;
     };
 
-}  // namespace GF_Engine
+}  // namespace GFE
 
 #endif

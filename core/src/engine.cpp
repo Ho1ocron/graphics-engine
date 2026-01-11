@@ -1,7 +1,7 @@
 #include "engine.h"
 
 
-namespace GF_Engine
+namespace GFE
 {
     std::shared_ptr<Drawable2D> Engine::create_object(Drawable2D* obj)
     {
@@ -35,4 +35,4 @@ namespace GF_Engine
             obj->update(deltaTime, screen_width, screen_height);
         }
     }
-}  // namespace GF_Engine
+}  // namespace GFE
