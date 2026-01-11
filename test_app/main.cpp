@@ -20,9 +20,9 @@ int main()
     printf("path: %s\n", std::filesystem::current_path().c_str());
 #endif
 
-    GF_Engine::Engine::print("Hello, World!");
+    GFE::Engine::print("Hello, World!");
 
-    GF_Engine::Engine engine("My App", 800, 600);
+    GFE::Engine engine("My App", 800, 600);
 
     // engine.init();
 
