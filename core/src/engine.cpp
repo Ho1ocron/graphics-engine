@@ -14,7 +14,6 @@ namespace GFE
 
     void Engine::draw_objs()
     {
-        printf("Drawing %zu objects\n", visible_on_screen.size());
         for(auto obj : visible_on_screen)
         {
             // obj->draw();

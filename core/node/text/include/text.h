@@ -10,7 +10,8 @@
 #include <string>
 #include FT_FREETYPE_H
 
-#include <shader.h>
+// #include <shader.h>
+#include "text_shader.h"
 
 #include "drawable2d.h"
 

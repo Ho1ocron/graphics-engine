@@ -1,6 +1,6 @@
 #include "text.h"
 
-#define SHADER_DIR "core/assets/shaders/"
+#define SHADER_DIR "core/assets/old_shaders/"
 
 namespace GFE
 {
@@ -88,7 +88,6 @@ namespace GFE
 
     void Text::draw()
     {
-        printf("Drawing text: %s at position (%.2f, %.2f)\n", content.c_str(), position.x, position.y);
         shader.use();
         shader.setVec3("textColor", color);
 
