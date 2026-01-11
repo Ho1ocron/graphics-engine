@@ -1,5 +1,6 @@
 #include "text.h"
 
+#define SHADER_DIR "core/assets/shaders/"
 
 namespace GFE
 {
@@ -85,8 +86,9 @@ namespace GFE
     // }
 
 
-    void Text::render()
+    void Text::draw()
     {
+        printf("Drawing text: %s at position (%.2f, %.2f)\n", content.c_str(), position.x, position.y);
         shader.use();
         shader.setVec3("textColor", color);
 
@@ -124,14 +126,25 @@ namespace GFE
     }
 
 
-    void Text::update(const unsigned int& screen_width, const unsigned int& screen_height)
+    void Text::update(const float& deltaTime, const unsigned int& screen_width, const unsigned int& screen_height)
     {
         // position = new_position;
         // setScreenSize(screen_width, screen_height);
         // render();
+        draw();
         return;
     }
 
 
     void Text::move(const glm::vec3& new_position) { position = new_position; }
+    // void Text::free()
+    // {
+    //     glDeleteVertexArrays(1, &VAO);
+    //     glDeleteBuffers(1, &VBO);
+    //     for(auto& pair : font.characters)
+    //     {
+    //         glDeleteTextures(1, &pair.second.TextureID);
+    //     }
+    // }
+    void Text::free() { return; }
 }  // namespace GFE

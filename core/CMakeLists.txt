@@ -41,6 +41,7 @@ target_link_libraries(engine PUBLIC
     drawable
     freetype
     label
+    text
 )
 
 

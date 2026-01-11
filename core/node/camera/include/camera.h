@@ -4,6 +4,15 @@
 #include <glm/mat4x4.hpp>
 #include <glm/vec2.hpp>
 
+#ifdef _WIN64
+    #include <cstdint>
+    using uint = std::uint32_t;
+#endif
+
+#ifdef __linux__
+    #include <cstdint>
+    using uint = std::uint32_t; 
+#endif
 namespace GFE
 {
     class Camera

@@ -39,9 +39,10 @@ namespace GFE
         Text(const char* text, const char* fontPath, glm::vec3 position, float fontSize, float scale, const unsigned int& screen_width,
              const unsigned int& screen_height, glm::vec3 color);
 
-        void render() override;
+        void draw() override;
         void move(const glm::vec3& new_position) override;
-        void update(const unsigned int& screen_width, const unsigned int& screen_height) override;
+        void update(const float& deltaTime, const unsigned int& screen_width, const unsigned int& screen_height) override;
+        void free() override;
 
         // void setScreenSize(const unsigned int& width, const unsigned int& height);
 

@@ -9,7 +9,7 @@ struct Drawable2D
 
     virtual void update(const float& deltaTime, const unsigned int& screen_width, const unsigned int& screen_height) = 0;
 
-    virtual void move(const glm::vec3& new_position);
+    virtual void move(const glm::vec3& new_position) { return; }
 
     virtual void draw() = 0;
 

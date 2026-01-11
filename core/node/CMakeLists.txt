@@ -10,6 +10,21 @@ target_link_libraries(label PUBLIC
     resource_manager
 )
 
+add_library(text STATIC
+    text/include/text.h
+    text/src/text.cpp
+)
+target_include_directories(text
+    PUBLIC text/include/
+)
+target_link_libraries(text PUBLIC
+    freetype
+    font
+    resource_manager
+    glm
+    glad
+    drawable
+)
 
 add_library(camera STATIC
     camera/include/camera.h
