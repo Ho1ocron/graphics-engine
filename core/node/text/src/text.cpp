@@ -85,6 +85,38 @@ namespace GFE
     //     shader.setMat4("projection", projection);
     // }
 
+    glm::vec2 Text::calculateTextDimensions() const
+    {
+        float width = 0.0f;
+        float height = 0.0f;
+
+        for(const char& c : content)
+        {
+            auto it = font.characters.find(c);
+            if(it == font.characters.end()) continue;
+
+            const Character& ch = it->second;
+            width += (ch.Advance >> 6) * scale;
+            float charHeight = ch.Size.y * scale;
+            if(charHeight > height) height = charHeight;
+        }
+
+        return glm::vec2(width, height);
+    }
+
+    void Text::setPositionOnScreenCenter(const glm::vec2& screen_center)
+    {
+        glm::vec2 text_dimensions = calculateTextDimensions();
+        position.x = (screen_width / 2.0f) - (text_dimensions.x / 2.0f);
+        position.y = (screen_height / 2.0f) - (text_dimensions.y / 2.0f);
+    }
+
+    glm::vec2 Text::getTextCenter() const
+    {
+        glm::vec2 text_dimensions = calculateTextDimensions();
+        return glm::vec2(position.x + text_dimensions.x / 2.0f, position.y + text_dimensions.y / 2.0f);
+    }
+
 
     void Text::draw()
     {

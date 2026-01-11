@@ -11,9 +11,8 @@
 #include FT_FREETYPE_H
 
 // #include <shader.h>
-#include "text_shader.h"
-
 #include "drawable2d.h"
+#include "text_shader.h"
 
 
 namespace GFE
@@ -53,8 +52,14 @@ namespace GFE
         void setPosition(const glm::vec3& new_position) { position = new_position; }
         glm::vec3 getPosition() const { return position; }
 
+        void setPositionOnScreenCenter(const glm::vec2& screen_center);
+        glm::vec2 getTextCenter() const;
+
         void setFontSize(float new_size) { fontSize = new_size; }
         float getFontSize() const { return fontSize; }
+
+        glm::vec3 getSize() const { return glm::vec3(content.length() * fontSize * scale, fontSize * scale, 0.0f); }
+        glm::vec3 getCenter() const { return position + getSize() * 0.5f; }
 
         void setScale(float new_scale) { scale = new_scale; }
         float getScale() const { return scale; }
@@ -76,6 +81,8 @@ namespace GFE
 
         Font font;
         Shader shader;
+
+        glm::vec2 calculateTextDimensions() const;
 
         unsigned int VBO{};
         unsigned int VAO{};
