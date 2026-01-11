@@ -127,3 +127,6 @@ void Text::update(const unsigned int& screen_width, const unsigned int& screen_h
     // setScreenSize(screen_width, screen_height);
     // render();
 }
+
+
+void Text::move(const glm::vec3& new_position) { position = new_position; }

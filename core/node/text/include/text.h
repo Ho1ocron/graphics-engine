@@ -37,7 +37,7 @@ public:
          const unsigned int& screen_height, glm::vec3 color);
 
     void render() override;
-    void move();
+    void move(const glm::vec3& new_position) override;
     void update(const glm::vec3& new_position, const unsigned int& screen_width, const unsigned int& screen_height) override;
 
     // void setScreenSize(const unsigned int& width, const unsigned int& height);
