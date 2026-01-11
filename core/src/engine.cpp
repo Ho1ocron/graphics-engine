@@ -100,7 +100,7 @@ namespace GFE
         deltaTime = timeNow - lastFrame;
         lastFrame = timeNow;
 
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClearColor(bg_color.x, bg_color.y, bg_color.z, bg_color.w);
         glClear(GL_COLOR_BUFFER_BIT);
 
         const glm::mat4x4&& VP = camera.get_view_projection();

@@ -13,6 +13,8 @@
 #include <engine.h>
 // #include "player/player.h"
 
+#define BG_COLOR {0.1f, 0.1f, 0.1f, 1.0f}
+
 
 int main()
 {
@@ -23,7 +25,7 @@ int main()
 
     GFE::Engine::print("Hello, World!");
 
-    GFE::Engine engine("My App", 800, 600);
+    GFE::Engine engine("My App", 800, 600, BG_COLOR);
 
     engine.init();
 
