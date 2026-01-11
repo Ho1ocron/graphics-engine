@@ -47,45 +47,44 @@ namespace GFE
     {
         if(!glfwInit())
         {
-            fprintf(stderr, "Failed to initialize GLFW\n");
-            return;
+            printf("Failed to initialize GLFW\n");
+            return;  // make sure to exit or handle this case
         }
-
+        // GLFWwindow* out;
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHintString(GLFW_X11_CLASS_NAME, "graphics-engine");
+        glfwWindowHintString(GLFW_X11_INSTANCE_NAME, "graphics-engine");
 
 #ifdef __APPLE__
+        // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
         glfwInitHint(GLFW_COCOA_MENUBAR, GLFW_FALSE);
         glfwInitHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_TRUE);
 #endif
-
         window = glfwCreateWindow(screen_width, screen_height, app_name, nullptr, nullptr);
         if(!window)
         {
-            fprintf(stderr, "Failed to create GLFW window — likely macOS GUI issue\n");
+            fprintf(stderr, "Failed to create GLFW window\n");
             glfwTerminate();
             return;
         }
 
+        glfwGetFramebufferSize(window, &screen_width, &screen_height);
         glfwSetWindowUserPointer(window, this);
         glfwMakeContextCurrent(window);
 
-        if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-        {
-            fprintf(stderr, "Failed to initialize GLAD\n");
-            return;
-        }
+        gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
-        glfwGetFramebufferSize(window, &screen_width, &screen_height);
+
         camera.set_dimensions(screen_width, screen_height);
 
         glfwSetFramebufferSizeCallback(window,
                                        [](GLFWwindow* window, int w, int h)
                                        {
                                            glViewport(0, 0, w, h);
-                                           Engine* app = static_cast<Engine*>(glfwGetWindowUserPointer(window));
+                                           Engine*&& app = static_cast<Engine*>(glfwGetWindowUserPointer(window));
                                            if(!app) return;
                                            app->camera.set_dimensions(w, h);
                                        });
@@ -112,51 +111,3 @@ namespace GFE
         glfwPollEvents();
     }
 }  // namespace GFE
-
-//     void Engine::init()
-//     {
-//         if(!glfwInit())
-//         {
-//             printf("Failed to initialize GLFW\n");
-//             return;  // make sure to exit or handle this case
-//         }
-//         // GLFWwindow* out;
-//         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-//         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-//         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-//         glfwWindowHintString(GLFW_X11_CLASS_NAME, "graphics-engine");
-//         glfwWindowHintString(GLFW_X11_INSTANCE_NAME, "graphics-engine");
-
-// #ifdef __APPLE__
-//         // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-//         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-//         glfwInitHint(GLFW_COCOA_MENUBAR, GLFW_FALSE);
-//         glfwInitHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_TRUE);
-// #endif
-//         window = glfwCreateWindow(screen_width, screen_height, app_name, nullptr, nullptr);
-//         if(!window)
-//         {
-//             fprintf(stderr, "Failed to create GLFW window\n");
-//             glfwTerminate();
-//             return;
-//         }
-
-//         glfwGetFramebufferSize(window, &screen_width, &screen_height);
-//         glfwSetWindowUserPointer(window, this);
-//         glfwMakeContextCurrent(window);
-
-//         camera.set_dimensions(screen_width, screen_height);
-
-//         glfwSetFramebufferSizeCallback(window,
-//                                        [](GLFWwindow* window, int w, int h)
-//                                        {
-//                                            glViewport(0, 0, w, h);
-//                                            Engine*&& app = static_cast<Engine*>(glfwGetWindowUserPointer(window));
-//                                            if(!app) return;
-//                                            app->camera.set_dimensions(w, h);
-//                                        });
-
-//         glViewport(0, 0, screen_width, screen_height);
-//         glEnable(GL_BLEND);
-//         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-//     }
