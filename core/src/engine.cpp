@@ -3,10 +3,10 @@
 
 namespace GFE
 {
-    void Engine::create_object(Drawable2D* obj)
+    void Engine::create_object(std::shared_ptr<Drawable2D> obj)
     {
-        std::shared_ptr<Drawable2D> ptr{obj};
-        visible_on_screen.push_back(ptr);
+        // std::shared_ptr<Drawable2D> ptr{obj};
+        visible_on_screen.push_back(obj);
     }
 
     void Engine::draw(std::shared_ptr<Drawable2D> obj) { obj->draw(); }
@@ -51,7 +51,7 @@ namespace GFE
     void Engine::quit()
     {
         free_objs();  // destroy GL objects FIRST
-        visible_on_screen.clear();
+        // visible_on_screen.clear();
         hidden_on_screen.clear();
 
         glfwDestroyWindow(window);

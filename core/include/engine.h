@@ -53,7 +53,7 @@ namespace GFE
         bool should_quit();
         void quit();
 
-        void create_object(Drawable2D* obj);
+        void create_object(std::shared_ptr<Drawable2D> obj);
         void draw(std::shared_ptr<Drawable2D> obj);
         void delete_object(std::shared_ptr<Drawable2D> obj) { obj.reset(); }
 

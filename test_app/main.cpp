@@ -41,7 +41,7 @@ int main()
     GFE::Text text1{"Hello, World!", "assets/fonts/JetBrainsMono-Regular.ttf", {25.0f, 50.0f, 0.0f}, 52.0f, 0.5f, SCREEN_WIDTH, SCREEN_HEIGHT, YELLOW};
 
     text1.getCenter();
-    engine.create_object(&text1);
+    engine.create_object(std::make_shared<GFE::Text>(text1));
 
     text1.setPositionOnScreenCenter();
 
