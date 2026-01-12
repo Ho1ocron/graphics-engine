@@ -21,12 +21,6 @@
 #define YELLOW {1.0f, 1.0f, 0.0f}
 #define BLUE {0.0f, 1.0f, 1.0f}
 
-typedef struct
-{
-    int x;
-    int y;
-} MyStruct;
-
 
 int main()
 {
@@ -40,11 +34,6 @@ int main()
     GFE::Engine engine("My App", SCREEN_WIDTH, SCREEN_HEIGHT, BG_COLOR);
 
     engine.init();
-
-    MyStruct my_struct_1 = {0, 0};
-    MyStruct my_struct_2 = {1, 1};
-
-    printf("x: %d, y: %d\n", my_struct_1.x, my_struct_1.y);
 
     GFE::Text text1("Hello, World!", "assets/fonts/JetBrainsMono-Regular.ttf", {25.0f, 50.0f, 0.0f}, 48.0f, 1.0f, SCREEN_WIDTH, SCREEN_HEIGHT, YELLOW);
     text1.getCenter();
