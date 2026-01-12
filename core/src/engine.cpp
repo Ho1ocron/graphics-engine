@@ -25,23 +25,47 @@ namespace GFE
 
     glm::vec4 Engine::get_bg_color() const { return bg_color; }
 
-    void Engine::print(const char* str) { printf("%s\n", str); }
+    void Engine::print_str(const char* str) { printf("%s\n", str); }
 
-    Engine::Engine(const char* name, const int& screen_width, const int& screen_height, const glm::vec4& bg_color)
+    Engine::Engine(const char* name, int screen_width, int screen_height, const glm::vec4& bg_color)
         : app_name(name), screen_height(screen_height), screen_width(screen_width), bg_color(bg_color)
     {
     }
 
-    bool Engine::should_quit()
+    void Engine::free_objs()
     {
-        if(!window)
-            return true;
-        else
-            return glfwWindowShouldClose(window);
+        if(!visible_on_screen.empty())
+        {
+            for(auto obj : visible_on_screen)
+            {
+                if(obj) delete_object(obj);
+            }
+        }
+        if(!hidden_on_screen.empty())
+        {
+            for(auto obj : hidden_on_screen) { delete_object(obj); }
+        }
     }
 
+    bool Engine::should_quit()
+    {
+        if(!window) { return true; }
+        else
+        {
+            // free_objs();
+            return glfwWindowShouldClose(window);
+        }
+    }
 
-    void Engine::quit() { glfwTerminate(); }
+    void Engine::quit()
+    {
+        free_objs();  // destroy GL objects FIRST
+        visible_on_screen.clear();
+        hidden_on_screen.clear();
+
+        glfwDestroyWindow(window);
+        glfwTerminate();
+    }
 
     void Engine::init()
     {

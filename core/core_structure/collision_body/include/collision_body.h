@@ -35,9 +35,9 @@ public:
     void setSize(const glm::vec3& new_size);
     glm::vec3 getSize() const;
 
-    void draw() override = 0;
+    virtual void draw() override = 0;
 
-    void update(const float& deltaTime, const unsigned int& screen_width, const unsigned int& screen_height) override;
+    virtual void update(const float& deltaTime, const unsigned int& screen_width, const unsigned int& screen_height) override = 0;
 
-    void free() override;
+    virtual void free() override = 0;
 };

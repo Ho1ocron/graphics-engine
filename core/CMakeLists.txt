@@ -42,6 +42,7 @@ target_link_libraries(engine PUBLIC
     freetype
     label
     text
+    character_body_2d
 )
 
 

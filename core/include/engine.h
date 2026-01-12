@@ -45,6 +45,7 @@ namespace GFE
         std::vector<std::shared_ptr<Drawable2D>> hidden_on_screen;
 
         void draw_objs();
+        void free_objs();
 
     public:
         void init();
@@ -62,11 +63,12 @@ namespace GFE
         void set_bg_color(const glm::vec4& new_color);
         glm::vec4 get_bg_color() const;
 
-        static void print(const char* str);
+        static void print_str(const char* str);
 
         glm::vec3 get_screen_center() const { return glm::vec3(screen_width / 2.0f, screen_height / 2.0f, 0.0f); }
+        GLFWwindow* get_window() const { return window; }
 
-        explicit Engine(const char* name, const int& screen_width, const int& screen_height, const glm::vec4& bg_color = {0.0f, 0.0f, 0.0f, 1.0f});
+        explicit Engine(const char* name, int screen_width, int screen_height, const glm::vec4& bg_color = {0.0f, 0.0f, 0.0f, 1.0f});
         ~Engine() = default;
     };
 

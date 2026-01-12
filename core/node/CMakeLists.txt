@@ -73,5 +73,5 @@ target_link_libraries(character_body_2d PUBLIC
 ) 
 
 target_link_libraries(collision_body PUBLIC 
-    drawable2d
+    drawable
 )
