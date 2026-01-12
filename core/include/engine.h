@@ -41,8 +41,9 @@ namespace GFE
         float timeNow = 0.0f;
         float lastFrame = 0.0f;
 
-        std::vector<std::shared_ptr<Drawable2D>> visible_on_screen;
-        std::vector<std::shared_ptr<Drawable2D>> hidden_on_screen;
+        // std::vector<std::unique_ptr<Drawable2D>> visible_on_screen;
+        std::vector<Drawable2D*> visible_on_screen;
+        std::vector<std::unique_ptr<Drawable2D>> hidden_on_screen;
 
         void draw_objs();
         void free_objs();
@@ -53,9 +54,9 @@ namespace GFE
         bool should_quit();
         void quit();
 
-        void create_object(std::shared_ptr<Drawable2D> obj);
+        void create_object(Drawable2D* obj);
         void draw(std::shared_ptr<Drawable2D> obj);
-        void delete_object(std::shared_ptr<Drawable2D> obj) { obj.reset(); }
+        void delete_object(std::unique_ptr<Drawable2D>& obj) { obj.reset(); }
 
         float get_deltaTime() const { return deltaTime; }
         float get_time() const { return timeNow; }

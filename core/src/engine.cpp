@@ -3,9 +3,11 @@
 
 namespace GFE
 {
-    void Engine::create_object(std::shared_ptr<Drawable2D> obj)
+    void Engine::create_object(Drawable2D* obj)
     {
         // std::shared_ptr<Drawable2D> ptr{obj};
+        // visible_on_screen.push_back(std::shared_ptr<Drawable2D>(obj));
+        // visible_on_screen.push_back(std::unique_ptr<Drawable2D>(obj));
         visible_on_screen.push_back(obj);
     }
 
@@ -13,7 +15,7 @@ namespace GFE
 
     void Engine::draw_objs()
     {
-        for(auto obj : visible_on_screen)
+        for(auto& obj : visible_on_screen)
         {
             // obj->draw();
             obj->update(deltaTime, screen_width, screen_height);
@@ -33,17 +35,21 @@ namespace GFE
 
     void Engine::free_objs()
     {
-        if(!visible_on_screen.empty())
-        {
-            for(auto obj : visible_on_screen)
-            {
-                if(obj) delete_object(obj);
-            }
-        }
-        if(!hidden_on_screen.empty())
-        {
-            for(auto obj : hidden_on_screen) { delete_object(obj); }
-        }
+        // if(!visible_on_screen.empty())
+        // {
+        //     for(auto& obj : visible_on_screen)
+        //     {
+        //         // if(obj) delete_object(obj);
+        //         obj.reset();
+        //     }
+        // }
+        // if(!hidden_on_screen.empty())
+        // {
+        //     for(auto& obj : hidden_on_screen) { delete_object(obj); }
+        // }
+
+        visible_on_screen.clear();
+        hidden_on_screen.clear();
     }
 
     bool Engine::should_quit() { return window && glfwWindowShouldClose(window); }
@@ -52,7 +58,7 @@ namespace GFE
     {
         free_objs();  // destroy GL objects FIRST
         // visible_on_screen.clear();
-        hidden_on_screen.clear();
+        // hidden_on_screen.clear();
 
         glfwDestroyWindow(window);
         glfwTerminate();
