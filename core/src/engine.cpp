@@ -47,15 +47,7 @@ namespace GFE
         }
     }
 
-    bool Engine::should_quit()
-    {
-        if(!window) { return true; }
-        else
-        {
-            // free_objs();
-            return glfwWindowShouldClose(window);
-        }
-    }
+    bool Engine::should_quit() { return window && glfwWindowShouldClose(window); }
 
     void Engine::quit()
     {
