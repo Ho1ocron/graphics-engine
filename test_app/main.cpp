@@ -31,11 +31,11 @@ int main()
 
     GFE::Engine::print("Hello, World!");
 
-    GFE::Engine engine("My App", SCREEN_WIDTH, SCREEN_HEIGHT, BG_COLOR);
+    GFE::Engine engine{"My App", SCREEN_WIDTH, SCREEN_HEIGHT, BG_COLOR};
 
     engine.init();
 
-    GFE::Text text1("Hello, World!", "assets/fonts/JetBrainsMono-Regular.ttf", {25.0f, 50.0f, 0.0f}, 48.0f, 1.0f, SCREEN_WIDTH, SCREEN_HEIGHT, YELLOW);
+    GFE::Text text1{"Hello, World!", "assets/fonts/JetBrainsMono-Regular.ttf", {25.0f, 50.0f, 0.0f}, 48.0f, 1.0f, SCREEN_WIDTH, SCREEN_HEIGHT, YELLOW};
     text1.getCenter();
     text1.setPositionOnScreenCenter();
     // text1.setPosition(engine.get_screen_center());
