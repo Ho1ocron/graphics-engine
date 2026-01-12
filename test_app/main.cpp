@@ -40,12 +40,11 @@ int main()
 
     GFE::Text text1{"Hello, World!", "assets/fonts/JetBrainsMono-Regular.ttf", {25.0f, 50.0f, 0.0f}, 52.0f, 0.5f, SCREEN_WIDTH, SCREEN_HEIGHT, YELLOW};
 
-    // Player player{SCREEN_WIDTH, SCREEN_HEIGHT, engine.get_window(), {25.0f, 100.0f, 0.0f}, 100.0f, CHARACTER};
     text1.getCenter();
+    engine.create_object(&text1);
+
     text1.setPositionOnScreenCenter();
-    // text1.setPosition(engine.get_screen_center());
-    std::shared_ptr<Drawable2D> text_obj1 = engine.create_object(&text1);
-    // std::shared_ptr<Drawable2D> player_onj = engine.create_object(&player);
+
 
     while(!engine.should_quit()) { engine.update(); }
 

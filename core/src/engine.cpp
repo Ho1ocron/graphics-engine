@@ -3,11 +3,10 @@
 
 namespace GFE
 {
-    std::shared_ptr<Drawable2D> Engine::create_object(Drawable2D* obj)
+    void Engine::create_object(Drawable2D* obj)
     {
         std::shared_ptr<Drawable2D> ptr{obj};
         visible_on_screen.push_back(ptr);
-        return ptr;
     }
 
     void Engine::draw(std::shared_ptr<Drawable2D> obj) { obj->draw(); }
