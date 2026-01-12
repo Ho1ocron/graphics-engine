@@ -66,7 +66,7 @@ namespace GFE
 
         glm::vec3 get_screen_center() const { return glm::vec3(screen_width / 2.0f, screen_height / 2.0f, 0.0f); }
 
-        Engine(const char* name, const int& screen_width, const int& screen_height, const glm::vec4& bg_color = {0.0f, 0.0f, 0.0f, 1.0f});
+        explicit Engine(const char* name, const int& screen_width, const int& screen_height, const glm::vec4& bg_color = {0.0f, 0.0f, 0.0f, 1.0f});
         ~Engine() = default;
     };
 

@@ -36,8 +36,8 @@ namespace GFE
     struct Text : Drawable2D
     {
     public:
-        Text(const char* text, const char* fontPath, glm::vec3 position, float fontSize, float scale, const unsigned int& screen_width,
-             const unsigned int& screen_height, glm::vec3 color);
+        explicit Text(const char* text, const char* fontPath, glm::vec3 position, float fontSize, float scale, const unsigned int& screen_width,
+                      const unsigned int& screen_height, glm::vec3 color);
 
         void draw() override;
         void move(const glm::vec3& new_position) override;
