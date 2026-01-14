@@ -5,15 +5,15 @@
 #include <glm/vec2.hpp>
 
 #ifdef _WIN64
-    #include <cstdint>
-    using uint = std::uint32_t;
+#include <cstdint>
+using uint = std::uint32_t;
 #endif
 
 #ifdef __linux__
-    #include <cstdint>
-    using uint = std::uint32_t; 
+#include <cstdint>
+using uint = std::uint32_t;
 #endif
-namespace GFE
+namespace GPE
 {
     class Camera
     {
@@ -27,4 +27,4 @@ namespace GFE
         void set_dimensions(const uint w, const uint h);
         glm::vec2 get_dimensions() const;
     };
-}  // namespace GFE
+}  // namespace GPE

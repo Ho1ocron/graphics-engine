@@ -20,7 +20,7 @@
 #include FT_FREETYPE_H
 
 
-namespace GFE
+namespace GPE
 {
     using Vec2 = glm::vec2;
     using Vec3 = glm::vec3;
@@ -95,6 +95,6 @@ namespace GFE
     //     return raw;
     // }
 
-}  // namespace GFE
+}  // namespace GPE
 
 #endif

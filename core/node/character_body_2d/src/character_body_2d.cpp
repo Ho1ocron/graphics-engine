@@ -1,6 +1,6 @@
 #include "character_body_2d.h"
 
-namespace GFE
+namespace GPE
 {
     void CharacterBody2D::updateSprite(unsigned int width, unsigned int height)
     {
@@ -18,11 +18,12 @@ namespace GFE
         position.y = glm::clamp(position.y, 0.0f, screen_hight);
     }
 
-    void CharacterBody2D::update(const float& deltaTime, const unsigned int& screen_width, const unsigned int& screen_height)
+    void CharacterBody2D::update(const float& deltaTime, const unsigned int& screen_width,
+                                 const unsigned int& screen_height)
     {
         int screen_w = screen_width;
         int screen_h = screen_height;
         move(deltaTime, (float)screen_w, (float)screen_h);
         updateSprite(screen_w, screen_h);
     }
-}  // namespace GFE
+}  // namespace GPE

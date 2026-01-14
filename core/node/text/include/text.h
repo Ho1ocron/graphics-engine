@@ -15,7 +15,7 @@
 #include "text_shader.h"
 
 
-namespace GFE
+namespace GPE
 {
 
     struct Character
@@ -36,12 +36,14 @@ namespace GFE
     struct Text : Drawable2D
     {
     public:
-        explicit Text(const char* text, const char* fontPath, glm::vec3 position, float fontSize, float scale, const unsigned int& screen_width,
+        explicit Text(const char* text, const char* fontPath, glm::vec3 position, float fontSize,
+                      float scale, const unsigned int& screen_width,
                       const unsigned int& screen_height, glm::vec3 color);
 
         void draw() override;
         void move(const glm::vec3& new_position) override;
-        void update(const float& deltaTime, const unsigned int& screen_width, const unsigned int& screen_height) override;
+        void update(const float& deltaTime, const unsigned int& screen_width,
+                    const unsigned int& screen_height) override;
         void free() override;
 
         // void setScreenSize(const unsigned int& width, const unsigned int& height);
@@ -58,7 +60,10 @@ namespace GFE
         void setFontSize(float new_size) { fontSize = new_size; }
         float getFontSize() const { return fontSize; }
 
-        glm::vec3 getSize() const { return glm::vec3(content.length() * fontSize * scale, fontSize * scale, 0.0f); }
+        glm::vec3 getSize() const
+        {
+            return glm::vec3(content.length() * fontSize * scale, fontSize * scale, 0.0f);
+        }
         glm::vec3 getCenter() const { return position + getSize() * 0.5f; }
 
         void setScale(float new_scale) { scale = new_scale; }
@@ -87,4 +92,4 @@ namespace GFE
         unsigned int VBO{};
         unsigned int VAO{};
     };
-}  // namespace GFE
+}  // namespace GPE

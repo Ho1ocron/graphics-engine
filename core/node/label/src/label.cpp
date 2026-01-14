@@ -7,7 +7,7 @@
 #include <cstring>
 
 // TODO: lazy buffers updating
-namespace GFE
+namespace GPE
 {
     Label& Label::set_text(const char* buf, const size_t& len, const Alignment alignment)
     {
@@ -43,13 +43,16 @@ namespace GFE
                 case Alignment::LEFT:
                     break;
             }
-            c_data.top_left.pos = {(long(x_px + c_font.offset.x) - align_px), c_font.size.y - c_font.offset.y};
+            c_data.top_left.pos = {(long(x_px + c_font.offset.x) - align_px),
+                                   c_font.size.y - c_font.offset.y};
             c_data.top_left.tex_pos = {c_font.top_left.x, c_font.top_left.y};
-            c_data.top_right.pos = {(long(x_px + c_font.size.x + c_font.offset.x) - align_px), c_font.size.y - c_font.offset.y};
+            c_data.top_right.pos = {(long(x_px + c_font.size.x + c_font.offset.x) - align_px),
+                                    c_font.size.y - c_font.offset.y};
             c_data.top_right.tex_pos = {c_font.bottom_right.x, c_font.top_left.y};
             c_data.bottom_left.pos = {(long(x_px + c_font.offset.x) - align_px), -c_font.offset.y};
             c_data.bottom_left.tex_pos = {c_font.top_left.x, c_font.bottom_right.y};
-            c_data.bottom_right.pos = {(long(x_px + c_font.size.x + c_font.offset.x) - align_px), -c_font.offset.y};
+            c_data.bottom_right.pos = {(long(x_px + c_font.size.x + c_font.offset.x) - align_px),
+                                       -c_font.offset.y};
             c_data.bottom_right.tex_pos = {c_font.bottom_right.x, c_font.bottom_right.y};
 
 
@@ -57,7 +60,8 @@ namespace GFE
         }
 
         // fill EBO
-        for(unsigned int i = 0, v = 0; i < INDICES_COUNT * len; i += INDICES_COUNT, v += VERTICES_COUNT)
+        for(unsigned int i = 0, v = 0; i < INDICES_COUNT * len;
+            i += INDICES_COUNT, v += VERTICES_COUNT)
         {
             indices[i + 0] = v + 0;  // top_left
             indices[i + 1] = v + 1;  // top_right
@@ -71,7 +75,8 @@ namespace GFE
         glBindBuffer(GL_ARRAY_BUFFER, _VBO);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
         glBufferData(GL_ARRAY_BUFFER, sizeof(SingleCharacter) * len, vertices, GL_STATIC_DRAW);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * len * INDICES_COUNT, indices, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * len * INDICES_COUNT, indices,
+                     GL_STATIC_DRAW);
 
         _len = len;
 
@@ -80,7 +85,10 @@ namespace GFE
         delete[] indices;
         return *this;
     }
-    Label& Label::set_text(const std::string_view& str, const Alignment alignment) { return set_text(str.data(), str.size(), alignment); }
+    Label& Label::set_text(const std::string_view& str, const Alignment alignment)
+    {
+        return set_text(str.data(), str.size(), alignment);
+    }
 
     Label& Label::set_color(const glm::vec3& color)
     {
@@ -93,7 +101,8 @@ namespace GFE
         return *this;
     }
 
-    Label::Label(const std::shared_ptr<FontAtlas>& font, const glm::vec2& pos, const glm::vec3& color, const Alignment alignment, const char* buf,
+    Label::Label(const std::shared_ptr<FontAtlas>& font, const glm::vec2& pos,
+                 const glm::vec3& color, const Alignment alignment, const char* buf,
                  const size_t len)
         : color(color), _font(font), pos(pos)
     {
@@ -107,8 +116,10 @@ namespace GFE
 
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(CharVertex), (void*)offsetof(CharVertex, pos));
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(CharVertex), (void*)offsetof(CharVertex, tex_pos));
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(CharVertex),
+                              (void*)offsetof(CharVertex, pos));
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(CharVertex),
+                              (void*)offsetof(CharVertex, tex_pos));
 
         if(buf)
             set_text(buf, len ? len : strlen(buf), alignment);
@@ -133,5 +144,5 @@ namespace GFE
         out[3][2] = 0.0f;
         return out;
     }
-}  // namespace GFE
+}  // namespace GPE
 #endif

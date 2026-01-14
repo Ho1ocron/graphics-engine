@@ -9,7 +9,7 @@
 #define BOLD_FONT "JetBrainsMono-Bold.ttf"
 
 
-class Player : public GFE::CharacterBody2D
+class Player : public GPE::CharacterBody2D
 {
 private:
     glm::vec3 size;
@@ -19,10 +19,12 @@ private:
     static constexpr const char* default_font_path = FONT_DIR BOLD_FONT;
 
 public:
-    Player(unsigned int screen_width, unsigned int screen_height, GLFWwindow* app_window, const glm::vec3& init_position = glm::vec3{0.0f},
-           const float& _speed = 1000.0f, const char* text = "@", const char* font_path = default_font_path, float font_size = 48.0f, float scale = 1.0f,
-           const glm::vec3& color = glm::vec3{1.0f})
-        : CharacterBody2D(std::make_unique<GFE::Text>(text, font_path, init_position, font_size, scale, screen_width, screen_height, color))
+    Player(unsigned int screen_width, unsigned int screen_height, GLFWwindow* app_window,
+           const glm::vec3& init_position = glm::vec3{0.0f}, const float& _speed = 1000.0f,
+           const char* text = "@", const char* font_path = default_font_path,
+           float font_size = 48.0f, float scale = 1.0f, const glm::vec3& color = glm::vec3{1.0f})
+        : CharacterBody2D(std::make_unique<GPE::Text>(text, font_path, init_position, font_size,
+                                                      scale, screen_width, screen_height, color))
     {
         position = init_position;
         speed = _speed;
@@ -48,11 +50,13 @@ public:
 
         if(glm::length(direction) > 0.0f) direction = glm::normalize(direction);
     }
-    void update(const float& deltaTime, const unsigned int& screen_width, const unsigned int& screen_height) override;
+    void update(const float& deltaTime, const unsigned int& screen_width,
+                const unsigned int& screen_height) override;
 };
 
 
-void Player::update(const float& deltaTime, const unsigned int& screen_width, const unsigned int& screen_height)
+void Player::update(const float& deltaTime, const unsigned int& screen_width,
+                    const unsigned int& screen_height)
 {
     input();
     move(deltaTime, 1600.0f, 1200.0f);

@@ -1,7 +1,7 @@
 #include "engine.h"
 
 
-namespace GFE
+namespace GPE
 {
     // template <typename T>
     // T* Engine::create_object(std::unique_ptr<Drawable2D>&& obj)
@@ -133,4 +133,4 @@ namespace GFE
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-}  // namespace GFE
+}  // namespace GPE

@@ -12,7 +12,7 @@
 
 #include "collision_shape_2d.h"
 
-namespace GFE
+namespace GPE
 {
     // template<class Drawable2D>
     struct CharacterBody2D : CollisionBody
@@ -22,11 +22,15 @@ namespace GFE
         std::unique_ptr<CircleCollisionShape2D> hitbox;
 
     public:
-        explicit CharacterBody2D(std::unique_ptr<Drawable2D> new_sprite) : sprite(std::move(new_sprite)) {}
+        explicit CharacterBody2D(std::unique_ptr<Drawable2D> new_sprite)
+            : sprite(std::move(new_sprite))
+        {
+        }
 
         void move(float deltaTime, float screen_width, float screen_hight);
 
-        void update(const float& deltaTime, const unsigned int& screen_width, const unsigned int& screen_height) override;
+        void update(const float& deltaTime, const unsigned int& screen_width,
+                    const unsigned int& screen_height) override;
 
         void updateSprite(unsigned int width, unsigned int height);
 
@@ -34,4 +38,4 @@ namespace GFE
         void draw() override {}
         void free() override {}
     };
-}  // namespace GFE
+}  // namespace GPE

@@ -20,9 +20,9 @@
 #define CHARACTER "@*>"
 
 
-GFE::Vec3 dynamic_gradient(float time)
+GPE::Vec3 dynamic_gradient(float time)
 {
-    return GFE::Vec3{(sinf(time) + 1.0f) / 2.0f, (cosf(time) + 1.0f) / 2.0f, 0.5f};
+    return GPE::Vec3{(sinf(time) + 1.0f) / 2.0f, (cosf(time) + 1.0f) / 2.0f, 0.5f};
 }
 
 
@@ -33,18 +33,18 @@ int main()
     printf("path: %s\n", std::filesystem::current_path().c_str());
 #endif
 
-    GFE::Engine::print_str("Hello, World!");
+    GPE::Engine::print_str("Hello, World!");
 
-    GFE::Engine engine{"My App", SCREEN_WIDTH, SCREEN_HEIGHT, BG_COLOR};
+    GPE::Engine engine{"My App", SCREEN_WIDTH, SCREEN_HEIGHT, BG_COLOR};
 
     engine.init();
 
-    // GFE::Text text1{"Hello, World!", "assets/fonts/JetBrainsMono-Regular.ttf", {25.0f, 50.0f,
+    // GPE::Text text1{"Hello, World!", "assets/fonts/JetBrainsMono-Regular.ttf", {25.0f, 50.0f,
     // 0.0f}, 52.0f, 0.5f, SCREEN_WIDTH, SCREEN_HEIGHT, YELLOW};
 
-    GFE::Text* text1 = engine.create_object<GFE::Text>(std::move(std::make_unique<GFE::Text>(
-        "Hello, World!", "assets/fonts/JetBrainsMono-Regular.ttf", GFE::Vec3{25.0f, 50.0f, 0.0f},
-        52.0f, 0.5f, SCREEN_WIDTH, SCREEN_HEIGHT, GFE::Vec3 YELLOW)));
+    GPE::Text* text1 = engine.create_object<GPE::Text>(std::move(std::make_unique<GPE::Text>(
+        "Hello, World!", "assets/fonts/JetBrainsMono-Regular.ttf", GPE::Vec3{25.0f, 50.0f, 0.0f},
+        52.0f, 0.5f, SCREEN_WIDTH, SCREEN_HEIGHT, GPE::Vec3 YELLOW)));
 
     text1->setPositionOnScreenCenter();
 

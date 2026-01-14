@@ -10,7 +10,7 @@
 #include <string_view>
 
 
-namespace GFE
+namespace GPE
 {
     class Label
     {
@@ -63,20 +63,26 @@ namespace GFE
                 shader->use();
                 shader->setInt("font", static_cast<int>(TextureUnits::FONT_ATLAS));
             }
-            StaticResources(ResourceManager& resource_manager) : StaticResources(resource_manager.get_shader<ShaderID::TEXT>()) {}
+            StaticResources(ResourceManager& resource_manager)
+                : StaticResources(resource_manager.get_shader<ShaderID::TEXT>())
+            {
+            }
         };
 
     public:
         // refills VBO and EBO, so please do not use frequently
-        Label& set_text(const char* buf, const size_t& len, const Alignment alignment = Alignment::KEEP_OLD);
-        Label& set_text(const std::string_view& str, const Alignment alignment = Alignment::KEEP_OLD);
+        Label& set_text(const char* buf, const size_t& len,
+                        const Alignment alignment = Alignment::KEEP_OLD);
+        Label& set_text(const std::string_view& str,
+                        const Alignment alignment = Alignment::KEEP_OLD);
         Label& set_color(const glm::vec3& color);
         Label& set_pos(const glm::vec2& pos);
 
         void draw(const StaticResources& res, const glm::mat4x4 VP) const;
-        Label(const std::shared_ptr<FontAtlas>& font, const glm::vec2& pos = {0.0, 0.0}, const glm::vec3& color = {1.0, 1.0, 1.0},
-              const Alignment alignment = Alignment::LEFT, const char* buf = nullptr, const size_t len = 0);
+        Label(const std::shared_ptr<FontAtlas>& font, const glm::vec2& pos = {0.0, 0.0},
+              const glm::vec3& color = {1.0, 1.0, 1.0}, const Alignment alignment = Alignment::LEFT,
+              const char* buf = nullptr, const size_t len = 0);
     };
-}  // namespace GFE
+}  // namespace GPE
 
 #endif
