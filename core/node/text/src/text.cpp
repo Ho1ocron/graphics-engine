@@ -4,8 +4,9 @@
 
 namespace GFE
 {
-    Text::Text(const char* text, const char* fontPath, glm::vec3 position, float fontSize, float scale, const unsigned int& screen_width,
-               const unsigned int& screen_height, glm::vec3 color)
+    Text::Text(const char* text, const char* fontPath, glm::vec3 position, float fontSize,
+               float scale, const unsigned int& screen_width, const unsigned int& screen_height,
+               glm::vec3 color)
         : content(text),
           position(position),
           fontSize(fontSize),
@@ -18,7 +19,8 @@ namespace GFE
         loadFont(fontPath, fontSize);
         setupBuffers();
 
-        glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(screen_width), 0.0f, static_cast<float>(screen_height));
+        glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(screen_width), 0.0f,
+                                          static_cast<float>(screen_height));
         shader.use();
         shader.setMat4("projection", projection);
     }
@@ -43,7 +45,8 @@ namespace GFE
             glGenTextures(1, &texture);
             glBindTexture(GL_TEXTURE_2D, texture);
 
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, face->glyph->bitmap.width, face->glyph->bitmap.rows, 0, GL_RED, GL_UNSIGNED_BYTE,
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, face->glyph->bitmap.width,
+                         face->glyph->bitmap.rows, 0, GL_RED, GL_UNSIGNED_BYTE,
                          face->glyph->bitmap.buffer);
 
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -51,10 +54,11 @@ namespace GFE
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-            font.characters[static_cast<char>(c)] = {texture,
-                                                     {face->glyph->bitmap.width, face->glyph->bitmap.rows},
-                                                     {face->glyph->bitmap_left, face->glyph->bitmap_top},
-                                                     static_cast<unsigned int>(face->glyph->advance.x)};
+            font.characters[static_cast<char>(c)] = {
+                texture,
+                {face->glyph->bitmap.width, face->glyph->bitmap.rows},
+                {face->glyph->bitmap_left, face->glyph->bitmap_top},
+                static_cast<unsigned int>(face->glyph->advance.x)};
         }
 
         FT_Done_Face(face);
@@ -80,9 +84,8 @@ namespace GFE
 
 
     // void Text::setScreenSize(const unsigned int& width, const unsigned int& height) {
-    //     glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(width), 0.0f, static_cast<float>(height));
-    //     shader.use();
-    //     shader.setMat4("projection", projection);
+    //     glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(width), 0.0f,
+    //     static_cast<float>(height)); shader.use(); shader.setMat4("projection", projection);
     // }
 
     glm::vec2 Text::calculateTextDimensions() const
@@ -114,7 +117,8 @@ namespace GFE
     glm::vec2 Text::getTextCenter() const
     {
         glm::vec2 text_dimensions = calculateTextDimensions();
-        return glm::vec2(position.x + text_dimensions.x / 2.0f, position.y + text_dimensions.y / 2.0f);
+        return glm::vec2(position.x + text_dimensions.x / 2.0f,
+                         position.y + text_dimensions.y / 2.0f);
     }
 
 
@@ -139,9 +143,11 @@ namespace GFE
             float w = ch.Size.x * scale;
             float h = ch.Size.y * scale;
 
-            float vertices[6][4] = {{xpos, ypos + h, 0.0f, 0.0f}, {xpos, ypos, 0.0f, 1.0f},     {xpos + w, ypos, 1.0f, 1.0f},
+            float vertices[6][4] = {{xpos, ypos + h, 0.0f, 0.0f},    {xpos, ypos, 0.0f, 1.0f},
+                                    {xpos + w, ypos, 1.0f, 1.0f},
 
-                                    {xpos, ypos + h, 0.0f, 0.0f}, {xpos + w, ypos, 1.0f, 1.0f}, {xpos + w, ypos + h, 1.0f, 0.0f}};
+                                    {xpos, ypos + h, 0.0f, 0.0f},    {xpos + w, ypos, 1.0f, 1.0f},
+                                    {xpos + w, ypos + h, 1.0f, 0.0f}};
 
             glBindTexture(GL_TEXTURE_2D, ch.TextureID);
             glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -157,12 +163,13 @@ namespace GFE
     }
 
 
-    void Text::update(const float& deltaTime, const unsigned int& screen_width, const unsigned int& screen_height)
+    void Text::update(const float& deltaTime, const unsigned int& screen_width,
+                      const unsigned int& screen_height)
     {
         // position = new_position;
         // setScreenSize(screen_width, screen_height);
         // render();
-        draw();
+        // draw();
     }
 
 

@@ -21,7 +21,8 @@ namespace GFE
     {
         for(auto& obj : visible_on_screen)
         {
-            // obj->draw();
+            // we should separate drawing and updating since invisible object can be updated
+            obj->draw();
             obj->update(deltaTime, screen_width, screen_height);
         }
     }
@@ -42,18 +43,14 @@ namespace GFE
 
     void Engine::free_objs()
     {
-        // if(!visible_on_screen.empty())
-        // {
-        //     for(auto& obj : visible_on_screen)
-        //     {
-        //         // if(obj) delete_object(obj);
-        //         obj.reset();
-        //     }
-        // }
-        // if(!hidden_on_screen.empty())
-        // {
-        //     for(auto& obj : hidden_on_screen) { delete_object(obj); }
-        // }
+        if(!visible_on_screen.empty())
+        {
+            for(auto& obj : visible_on_screen) { obj.reset(); }
+        }
+        if(!hidden_on_screen.empty())
+        {
+            for(auto& obj : hidden_on_screen) { obj.reset(); }
+        }
 
         visible_on_screen.clear();
         hidden_on_screen.clear();
@@ -63,10 +60,7 @@ namespace GFE
 
     void Engine::quit()
     {
-        free_objs();  // destroy GL objects FIRST
-        // visible_on_screen.clear();
-        // hidden_on_screen.clear();
-
+        free_objs();
         glfwDestroyWindow(window);
         glfwTerminate();
     }
