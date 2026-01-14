@@ -3,7 +3,7 @@ BasedOnStyle: Google
 IndentWidth: 4
 MaxEmptyLinesToKeep: 2
 NamespaceIndentation: All
-ColumnLimit: 160
+ColumnLimit: 100
 PenaltyBreakAssignment: 2
 PenaltyReturnTypeOnItsOwnLine: 200
 PointerAlignment: Left

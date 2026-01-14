@@ -12,8 +12,9 @@
 // #include "app.h"
 #include <engine.h>
 #include <text.h>
+#include <vector3.h>
 
-// #include "player/player.h"
+#include "player/player.h"
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
@@ -23,6 +24,12 @@
 #define BLUE {0.0f, 1.0f, 1.0f}
 
 #define CHARACTER "@*>"
+
+
+glm::vec3 rgb_text(float time)
+{
+    return glm::vec3{(sinf(time) + 1.0f) / 2.0f, (cosf(time) + 1.0f) / 2.0f, 0.5f};
+}
 
 
 int main()
@@ -38,13 +45,26 @@ int main()
 
     engine.init();
 
-    GFE::Text text1{CHARACTER, "assets/fonts/JetBrainsMono-Regular.ttf", {25.0f, 50.0f, 0.0f}, 52.0f, 0.5f, SCREEN_WIDTH, SCREEN_HEIGHT, YELLOW};
+    // GFE::Text text1{"Hello, World!", "assets/fonts/JetBrainsMono-Regular.ttf", {25.0f, 50.0f,
+    // 0.0f}, 52.0f, 0.5f, SCREEN_WIDTH, SCREEN_HEIGHT, YELLOW};
 
-    engine.create_object(&text1);
+    // std::unique_ptr<GFE::Text> text1 = std::make_unique<GFE::Text>("Hello, World!",
+    // "assets/fonts/JetBrainsMono-Regular.ttf", glm::vec3{25.0f, 50.0f, 0.0f},
+    //                                                                52.0f, 0.5f, SCREEN_WIDTH,
+    //                                                                SCREEN_HEIGHT,
+    //                                                                glm::vec3{1.0f, 1.0f, 0.0f});
+    GFE::Text* text1 = engine.create_object<GFE::Text>(std::move(std::make_unique<GFE::Text>(
+        "Hello, World!", "assets/fonts/JetBrainsMono-Regular.ttf", glm::vec3{25.0f, 50.0f, 0.0f},
+        52.0f, 0.5f, SCREEN_WIDTH, SCREEN_HEIGHT, glm::vec3 YELLOW)));
 
-    text1.setPositionOnScreenCenter();
+    text1->setPositionOnScreenCenter();
 
-    while(!engine.should_quit()) { engine.update(); }
+
+    while(!engine.should_quit())
+    {
+        text1->setColor(rgb_text(engine.get_time()));
+        engine.update();
+    }
 
     engine.quit();
     return 0;

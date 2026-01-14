@@ -3,13 +3,17 @@
 
 namespace GFE
 {
-    void Engine::create_object(Drawable2D* obj)
-    {
-        // std::shared_ptr<Drawable2D> ptr{obj};
-        // visible_on_screen.push_back(std::shared_ptr<Drawable2D>(obj));
-        // visible_on_screen.push_back(std::unique_ptr<Drawable2D>(obj));
-        visible_on_screen.push_back(obj);
-    }
+    // template <typename T>
+    // T* Engine::create_object(std::unique_ptr<Drawable2D>&& obj)
+    // {
+    //     // std::shared_ptr<Drawable2D> ptr{obj};
+    //     // visible_on_screen.push_back(std::shared_ptr<Drawable2D>(obj));
+    //     // visible_on_screen.push_back(std::unique_ptr<Drawable2D>(obj));
+    //     // auto rptr = static_cast<type*>();
+    //     T* obj_ptr = static_cast<T*>(obj.get());
+    //     visible_on_screen.push_back(std::move(obj));
+    //     return obj_ptr;
+    // }
 
     void Engine::draw(std::shared_ptr<Drawable2D> obj) { obj->draw(); }
 
@@ -29,7 +33,10 @@ namespace GFE
     void Engine::print_str(const char* str) { printf("%s\n", str); }
 
     Engine::Engine(const char* name, int screen_width, int screen_height, const glm::vec4& bg_color)
-        : app_name(name), screen_height(screen_height), screen_width(screen_width), bg_color(bg_color)
+        : app_name(name),
+          screen_height(screen_height),
+          screen_width(screen_width),
+          bg_color(bg_color)
     {
     }
 
@@ -101,14 +108,15 @@ namespace GFE
 
         camera.set_dimensions(screen_width, screen_height);
 
-        glfwSetFramebufferSizeCallback(window,
-                                       [](GLFWwindow* window, int w, int h)
-                                       {
-                                           glViewport(0, 0, w, h);
-                                           Engine*&& app = static_cast<Engine*>(glfwGetWindowUserPointer(window));
-                                           if(!app) return;
-                                           app->camera.set_dimensions(w, h);
-                                       });
+        glfwSetFramebufferSizeCallback(
+            window,
+            [](GLFWwindow* window, int w, int h)
+            {
+                glViewport(0, 0, w, h);
+                Engine*&& app = static_cast<Engine*>(glfwGetWindowUserPointer(window));
+                if(!app) return;
+                app->camera.set_dimensions(w, h);
+            });
 
         glViewport(0, 0, screen_width, screen_height);
         glEnable(GL_BLEND);

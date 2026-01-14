@@ -5,7 +5,6 @@
 // hey clang-format please dont shuffle includes here
 #include <GLFW/glfw3.h>
 // thank you
-
 #include <camera.h>
 #include <drawable2d.h>
 #include <ft2build.h>
@@ -42,7 +41,7 @@ namespace GFE
         float lastFrame = 0.0f;
 
         // std::vector<std::unique_ptr<Drawable2D>> visible_on_screen;
-        std::vector<Drawable2D*> visible_on_screen;
+        std::vector<std::unique_ptr<Drawable2D>> visible_on_screen;
         std::vector<std::unique_ptr<Drawable2D>> hidden_on_screen;
 
         void draw_objs();
@@ -53,8 +52,13 @@ namespace GFE
         void update();
         bool should_quit();
         void quit();
-
-        void create_object(Drawable2D* obj);
+        template <typename T>
+        T* create_object(std::unique_ptr<Drawable2D>&& obj)
+        {
+            T* obj_ptr = static_cast<T*>(obj.get());
+            visible_on_screen.push_back(std::move(obj));
+            return obj_ptr;
+        }
         void draw(std::shared_ptr<Drawable2D> obj);
         void delete_object(std::unique_ptr<Drawable2D>& obj) { obj.reset(); }
 
@@ -66,12 +70,24 @@ namespace GFE
 
         static void print_str(const char* str);
 
-        glm::vec3 get_screen_center() const { return glm::vec3(screen_width / 2.0f, screen_height / 2.0f, 0.0f); }
+        glm::vec3 get_screen_center() const
+        {
+            return glm::vec3(screen_width / 2.0f, screen_height / 2.0f, 0.0f);
+        }
         GLFWwindow* get_window() const { return window; }
 
-        explicit Engine(const char* name, int screen_width, int screen_height, const glm::vec4& bg_color = {0.0f, 0.0f, 0.0f, 1.0f});
+        explicit Engine(const char* name, int screen_width, int screen_height,
+                        const glm::vec4& bg_color = {0.0f, 0.0f, 0.0f, 1.0f});
         ~Engine() = default;
     };
+
+    // template <typename T>
+    // T* Engine::create_object(std::unique_ptr<Drawable2D>&& obj)
+    // {
+    //     T* raw = static_cast<T*>(obj.get());
+    //     visible_on_screen.push_back(std::move(obj));
+    //     return raw;
+    // }
 
 }  // namespace GFE
 

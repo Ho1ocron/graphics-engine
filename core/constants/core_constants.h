@@ -3,39 +3,52 @@
 #include <cstring>
 #include <string_view>
 #define SHADER_DIR "core/assets/shaders/"
+
 // #define FONT_DIR "assets/fonts/"
 
-enum class TextureUnits : unsigned char {
+enum class TextureUnits : unsigned char
+{
     GENERAL0 = 0,
     GENERAL1 = 1,
     FONT_ATLAS = 3,
     TextureUnits_MAX = 16,
 };
 
-enum class ShaderID { TEXT };
+enum class ShaderID
+{
+    TEXT
+};
 
-struct ShadersPaths {
+struct ShadersPaths
+{
     const std::string_view vertex;
     const std::string_view fragment;
     const std::string_view geometry;
-    constexpr ShadersPaths(const std::string_view& vertex, const std::string_view& fragment, const std::string_view& geometry = "") : vertex(vertex), fragment(fragment), geometry(geometry) {}
+    constexpr ShadersPaths(const std::string_view& vertex, const std::string_view& fragment,
+                           const std::string_view& geometry = "")
+        : vertex(vertex), fragment(fragment), geometry(geometry)
+    {
+    }
     template <enum ShaderID>
-    constexpr static const ShadersPaths get_path() {
+    constexpr static const ShadersPaths get_path()
+    {
         // default (unknown)
         return ShadersPaths{"text.vs", "text.fs", nullptr};
     }
 };
 
 // TODO: add SHADER_DIR "/" in ResourceManager
-#define _SHADER2(ID, vertpath, fragpath)                                                 \
-    template <>                                                                          \
-    constexpr const ShadersPaths ShadersPaths::get_path<ShaderID::ID>() { \
-        return ShadersPaths{vertpath, fragpath};           \
+#define _SHADER2(ID, vertpath, fragpath)                                \
+    template <>                                                         \
+    constexpr const ShadersPaths ShadersPaths::get_path<ShaderID::ID>() \
+    {                                                                   \
+        return ShadersPaths{vertpath, fragpath};                        \
     }
-#define _SHADER3(ID, vertpath, fragpath, geompath)                                                      \
-    template <>                                                                                         \
-    constexpr const ShadersPaths ShadersPaths::get_path<ShaderID::ID>() {                \
-        return ShadersPaths{vertpath, fragpath, geompath}; \
+#define _SHADER3(ID, vertpath, fragpath, geompath)                      \
+    template <>                                                         \
+    constexpr const ShadersPaths ShadersPaths::get_path<ShaderID::ID>() \
+    {                                                                   \
+        return ShadersPaths{vertpath, fragpath, geompath};              \
     }
 
 #pragma region list_shaders
