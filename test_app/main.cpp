@@ -20,7 +20,7 @@
 #define CHARACTER "@*>"
 
 
-GFE::Vec3 rgb_text(float time)
+GFE::Vec3 dynamic_gradient(float time)
 {
     return GFE::Vec3{(sinf(time) + 1.0f) / 2.0f, (cosf(time) + 1.0f) / 2.0f, 0.5f};
 }
@@ -51,7 +51,7 @@ int main()
 
     while(!engine.should_quit())
     {
-        text1->setColor(rgb_text(engine.get_time()));
+        text1->setColor(dynamic_gradient(engine.get_time()));
         engine.update();
     }
 
