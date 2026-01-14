@@ -1,10 +1,5 @@
-#include <glad/glad.h>
-// hey clang-format please dont shuffle includes here
-#include <GLFW/glfw3.h>
-// thank you
 #include <cmath>
 #include <string>
-#include <string_view>
 
 #ifdef __linux__
 #include <filesystem>
@@ -12,7 +7,6 @@
 // #include "app.h"
 #include <engine.h>
 #include <text.h>
-#include <vector3.h>
 
 #include "player/player.h"
 
@@ -26,9 +20,9 @@
 #define CHARACTER "@*>"
 
 
-glm::vec3 rgb_text(float time)
+GFE::Vec3 rgb_text(float time)
 {
-    return glm::vec3{(sinf(time) + 1.0f) / 2.0f, (cosf(time) + 1.0f) / 2.0f, 0.5f};
+    return GFE::Vec3{(sinf(time) + 1.0f) / 2.0f, (cosf(time) + 1.0f) / 2.0f, 0.5f};
 }
 
 
@@ -48,14 +42,9 @@ int main()
     // GFE::Text text1{"Hello, World!", "assets/fonts/JetBrainsMono-Regular.ttf", {25.0f, 50.0f,
     // 0.0f}, 52.0f, 0.5f, SCREEN_WIDTH, SCREEN_HEIGHT, YELLOW};
 
-    // std::unique_ptr<GFE::Text> text1 = std::make_unique<GFE::Text>("Hello, World!",
-    // "assets/fonts/JetBrainsMono-Regular.ttf", glm::vec3{25.0f, 50.0f, 0.0f},
-    //                                                                52.0f, 0.5f, SCREEN_WIDTH,
-    //                                                                SCREEN_HEIGHT,
-    //                                                                glm::vec3{1.0f, 1.0f, 0.0f});
     GFE::Text* text1 = engine.create_object<GFE::Text>(std::move(std::make_unique<GFE::Text>(
-        "Hello, World!", "assets/fonts/JetBrainsMono-Regular.ttf", glm::vec3{25.0f, 50.0f, 0.0f},
-        52.0f, 0.5f, SCREEN_WIDTH, SCREEN_HEIGHT, glm::vec3 YELLOW)));
+        "Hello, World!", "assets/fonts/JetBrainsMono-Regular.ttf", GFE::Vec3{25.0f, 50.0f, 0.0f},
+        52.0f, 0.5f, SCREEN_WIDTH, SCREEN_HEIGHT, GFE::Vec3 YELLOW)));
 
     text1->setPositionOnScreenCenter();
 

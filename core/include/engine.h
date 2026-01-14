@@ -22,6 +22,10 @@
 
 namespace GFE
 {
+    using Vec2 = glm::vec2;
+    using Vec3 = glm::vec3;
+    using Vec4 = glm::vec4;
+
     class Engine
     {
     private:
@@ -52,6 +56,7 @@ namespace GFE
         void update();
         bool should_quit();
         void quit();
+
         template <typename T>
         T* create_object(std::unique_ptr<Drawable2D>&& obj)
         {
@@ -59,6 +64,7 @@ namespace GFE
             visible_on_screen.push_back(std::move(obj));
             return obj_ptr;
         }
+
         void draw(std::shared_ptr<Drawable2D> obj);
         void delete_object(std::unique_ptr<Drawable2D>& obj) { obj.reset(); }
 
