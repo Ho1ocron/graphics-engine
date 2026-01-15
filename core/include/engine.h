@@ -45,7 +45,7 @@ namespace GPE
         float lastFrame = 0.0f;
 
         // std::vector<std::unique_ptr<Drawable2D>> visible_on_screen;
-        std::vector<std::unique_ptr<Drawable2D>> visible_on_screen;
+        std::vector<std::shared_ptr<Drawable2D>> visible_on_screen;
         std::vector<std::unique_ptr<Drawable2D>> hidden_on_screen;
 
         void draw_objs();
@@ -58,11 +58,9 @@ namespace GPE
         void quit();
 
         template <typename T>
-        T* create_object(std::unique_ptr<Drawable2D>&& obj)
+        std::shared_ptr<T> create_object(std::unique_ptr<Drawable2D>&& obj)
         {
-            T* obj_ptr = static_cast<T*>(obj.get());
-            visible_on_screen.push_back(std::move(obj));
-            return obj_ptr;
+            return std::static_pointer_cast<T>(visible_on_screen.emplace_back(std::move(obj)));
         }
 
         void draw(std::shared_ptr<Drawable2D> obj);

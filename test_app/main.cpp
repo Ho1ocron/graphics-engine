@@ -42,9 +42,10 @@ int main()
     // GPE::Text text1{"Hello, World!", "assets/fonts/JetBrainsMono-Regular.ttf", {25.0f, 50.0f,
     // 0.0f}, 52.0f, 0.5f, SCREEN_WIDTH, SCREEN_HEIGHT, YELLOW};
 
-    GPE::Text* text1 = engine.create_object<GPE::Text>(std::move(std::make_unique<GPE::Text>(
-        "Hello, World!", "assets/fonts/JetBrainsMono-Regular.ttf", GPE::Vec3{25.0f, 50.0f, 0.0f},
-        52.0f, 0.5f, SCREEN_WIDTH, SCREEN_HEIGHT, GPE::Vec3 YELLOW)));
+    std::shared_ptr<GPE::Text> text1 = engine.create_object<GPE::Text>(std::move(
+        std::make_unique<GPE::Text>("Hello, World!", "assets/fonts/JetBrainsMono-Regular.ttf",
+                                    GPE::Vec3{25.0f, 50.0f, 0.0f}, 52.0f, 0.5f, SCREEN_WIDTH,
+                                    SCREEN_HEIGHT, GPE::Vec3 YELLOW)));
 
     text1->setPositionOnScreenCenter();
 
