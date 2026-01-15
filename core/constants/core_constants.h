@@ -1,11 +1,17 @@
 #pragma once
-
 #include <cstring>
+#include <glm/glm.hpp>
 #include <string_view>
 #define SHADER_DIR "core/assets/shaders/"
 
 // #define FONT_DIR "assets/fonts/"
 
+namespace GPE
+{
+    using Vec2 = glm::vec2;
+    using Vec3 = glm::vec3;
+    using Vec4 = glm::vec4;
+}  // namespace GPE
 enum class TextureUnits : unsigned char
 {
     GENERAL0 = 0,

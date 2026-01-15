@@ -12,7 +12,6 @@
 #include <resource_manager.h>
 
 #include <functional>
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <memory>
@@ -22,9 +21,7 @@
 
 namespace GPE
 {
-    using Vec2 = glm::vec2;
-    using Vec3 = glm::vec3;
-    using Vec4 = glm::vec4;
+
 
     class Engine
     {
