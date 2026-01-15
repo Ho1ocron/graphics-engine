@@ -17,7 +17,7 @@ namespace GPE
 
     void Engine::draw(std::shared_ptr<Drawable2D> obj) { obj->draw(); }
 
-    void Engine::draw_objs()
+    void Engine::draw_and_update_objs()
     {
         for(auto& obj : visible_on_screen)
         {
@@ -25,6 +25,9 @@ namespace GPE
             obj->draw();
             obj->update(deltaTime, screen_width, screen_height);
         }
+
+        // for(auto& obj : hidden_on_screen) { obj->update(deltaTime, screen_width, screen_height);
+        // }
     }
 
     void Engine::set_bg_color(const glm::vec4& new_color) { bg_color = new_color; }
@@ -128,7 +131,7 @@ namespace GPE
 
         const glm::mat4x4&& VP = camera.get_view_projection();
 
-        draw_objs();
+        draw_and_update_objs();
 
         glfwSwapBuffers(window);
         glfwPollEvents();

@@ -21,8 +21,6 @@
 
 namespace GPE
 {
-
-
     class Engine
     {
     private:
@@ -43,9 +41,9 @@ namespace GPE
 
         // std::vector<std::unique_ptr<Drawable2D>> visible_on_screen;
         std::vector<std::shared_ptr<Drawable2D>> visible_on_screen;
-        std::vector<std::unique_ptr<Drawable2D>> hidden_on_screen;
+        std::vector<std::shared_ptr<Drawable2D>> hidden_on_screen;
 
-        void draw_objs();
+        void draw_and_update_objs();
         void free_objs();
 
     public:
@@ -62,6 +60,9 @@ namespace GPE
 
         void draw(std::shared_ptr<Drawable2D> obj);
         void delete_object(std::unique_ptr<Drawable2D>& obj) { obj.reset(); }
+
+        void hide_on_screen(std::shared_ptr<Drawable2D> obj);
+        void show_on_screen(std::shared_ptr<Drawable2D> obj);
 
         float get_deltaTime() const { return deltaTime; }
         float get_time() const { return timeNow; }
