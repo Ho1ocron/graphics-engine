@@ -50,8 +50,8 @@ int main()
     {
         texts.push_back(engine.create_object<GPE::Text>(std::move(std::make_unique<GPE::Text>(
             "Some text!", "assets/fonts/JetBrainsMono-Regular.ttf",
-            GPE::Vec3{20.0f * i, SCREEN_HEIGHT - (float)30 * i, 0.0f}, 48.0f, 0.5f, SCREEN_WIDTH,
-            SCREEN_HEIGHT, GPE::Vec3 YELLOW))));
+            GPE::Vec3{100.0f + 20.0f * (i % 2), SCREEN_HEIGHT - (float)30 * i, 0.0f}, 48.0f, 0.5f,
+            SCREEN_WIDTH, SCREEN_HEIGHT, GPE::Vec3 YELLOW))));
     }
 
     while(!engine.should_quit())
