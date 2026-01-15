@@ -1,5 +1,5 @@
 # GF Engine (gf-engine)
-A simple game engine we are developing. It is based on *GLFW*, *OpenGL* framework, alongside with *GLM* for all the math and *Glad* for more functional. We also use *freetype* to render the text.
+A simple game engine we are developing. It is based on [*GLFW*](https://github.com/glfw/glfw/), *OpenGL* framework, alongside with [*GLM*](https://github.com/g-truc/glm) for all the math and [*Glad*](https://glad.dav1d.de/) for more functional. We also use [*freetype*](https://github.com/freetype/freetype/) to render the text.
 
 ## Installation 
 1. Clone the repository.
