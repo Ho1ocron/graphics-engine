@@ -1,5 +1,6 @@
+#include <array>
 #include <cmath>
-#include <string>
+
 
 #ifdef __linux__
 #include <filesystem>
@@ -8,7 +9,8 @@
 #include <engine.h>
 #include <text.h>
 
-#include "player/player.h"
+#include "GLFW/glfw3.h"
+
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
@@ -28,6 +30,12 @@ GPE::Vec3 dynamic_gradient(float time)
 
 std::vector<std::shared_ptr<GPE::Text>> texts;
 
+enum class Actions : Input::ActionId
+{
+    QUIT,
+    PRINT_HELLO,
+    MAX
+};
 
 int main()
 {
@@ -36,7 +44,23 @@ int main()
     printf("path: %s\n", std::filesystem::current_path().c_str());
 #endif
 
-    GPE::Engine engine{"My App", SCREEN_WIDTH, SCREEN_HEIGHT};
+    std::array<Action, static_cast<size_t>(Actions::MAX)> actions;
+
+    GPE::Engine engine{"My App", SCREEN_WIDTH, SCREEN_HEIGHT, {actions.data()}, BG_COLOR};
+    engine.input.bind_key(GLFW_KEY_ENTER, Actions::PRINT_HELLO)
+        .set_callback([](void*, Action::State) { printf("HELLO\n"); },
+                      Action::CallbackMode::JUST_PRESS);
+    // engine.input.bind_key(GLFW_KEY_ESCAPE, Actions::QUIT);
+    engine.input.bind_key(GLFW_KEY_Q, Actions::QUIT);
+    engine.input.bind_key(GLFW_KEY_ESCAPE, Actions::QUIT);
+    engine.input.get_action(Actions::QUIT)
+        .set_callback(
+            [](void* _engine, Action::State)
+            {
+                printf("Engine::queue_quit()\n");
+                static_cast<decltype(&engine)>(_engine)->queue_quit();
+            },
+            Action::CallbackMode::JUST_PRESS);
     engine.init();
 
     std::shared_ptr<GPE::Text> text1 =
