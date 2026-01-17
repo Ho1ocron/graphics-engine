@@ -1,7 +1,6 @@
-add_library(utils STATIC
-    include/bounded_counter.h
-)
+add_library(utils INTERFACE)
+
 target_include_directories(utils
-    PUBLIC include/
+    INTERFACE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
-set_target_properties(utils PROPERTIES LINKER_LANGUAGE CXX)
