@@ -94,7 +94,7 @@ namespace GPE
 
         explicit Engine(const char* name, int screen_width, int screen_height,
                         Input&& input = Input(),
-                        const glm::vec4& bg_color = {0.0f, 0.0f, 0.0f, 1.0f});
+                        const glm::vec4& bg_color = {0.1f, 0.1f, 0.1f, 1.0f});
         ~Engine() = default;
     };
 

@@ -36,7 +36,7 @@ int main()
     printf("path: %s\n", std::filesystem::current_path().c_str());
 #endif
 
-    GPE::Engine engine{"My App", SCREEN_WIDTH, SCREEN_HEIGHT, BG_COLOR};
+    GPE::Engine engine{"My App", SCREEN_WIDTH, SCREEN_HEIGHT};
     engine.init();
 
     std::shared_ptr<GPE::Text> text1 =
