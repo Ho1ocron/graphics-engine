@@ -31,7 +31,8 @@ namespace GPE
             JUST_BOTH,
         };
 
-        void (*callback)(void* user_data, State state);
+        void (*callback)(void* user_data, void* static_user_data, State state);
+        void* static_user_data = nullptr;
         BoundedCounter<unsigned char> m_count = 0;  // max 256 presses
         State m_state = State::RELEASED;
         CallbackMode callback_mode{};
@@ -42,12 +43,16 @@ namespace GPE
         bool is_just_released() const;
         void update(const bool press_or_release, void* callback_data = nullptr);
 
-        void set_callback(void (*callback)(void* user_data, State state));
-        void set_callback(void (*callback)(void* user_data, State state), const CallbackMode mode);
+        void set_callback(void (*callback)(void* user_data, void* static_user_data, State state));
+        void set_callback(void (*callback)(void* user_data, void* static_user_data, State state),
+                          const CallbackMode mode);
         void set_callback_mode(const CallbackMode mode);
 
+        void set_static_user_data(void* other);
+
         constexpr Action(const CallbackMode callback_mode = CallbackMode::NEVER,
-                         void (*callback)(void* user_data, State state) = nullptr)
+                         void (*callback)(void* user_data, void* static_user_data,
+                                          State state) = nullptr)
             : callback(callback), callback_mode(callback_mode)
         {
         }

@@ -6,7 +6,6 @@
 namespace GPE
 {
 
-
     void Action::update(const bool press_or_release, void* callback_data)
     {
         if(press_or_release)
@@ -28,23 +27,24 @@ namespace GPE
             switch(callback_mode)
             {
                 case CallbackMode::PRESS:
-                    if(is_pressed()) callback(callback_data, m_state);
+                    if(is_pressed()) callback(callback_data, static_user_data, m_state);
                     break;
                 case CallbackMode::RELEASE:
-                    if(is_released()) callback(callback_data, m_state);
+                    if(is_released()) callback(callback_data, static_user_data, m_state);
                     break;
                 case CallbackMode::JUST_PRESS:
-                    if(is_just_pressed()) callback(callback_data, m_state);
+                    if(is_just_pressed()) callback(callback_data, static_user_data, m_state);
                     break;
                 case CallbackMode::JUST_RELEASE:
-                    if(is_just_released()) callback(callback_data, m_state);
+                    if(is_just_released()) callback(callback_data, static_user_data, m_state);
                     break;
                 case CallbackMode::JUST_BOTH:
-                    if(is_just_pressed() || is_just_released()) callback(callback_data, m_state);
+                    if(is_just_pressed() || is_just_released())
+                        callback(callback_data, static_user_data, m_state);
                     break;
 
                 case CallbackMode::BOTH:
-                    callback(callback_data, m_state);
+                    callback(callback_data, static_user_data, m_state);
                 case CallbackMode::NEVER:
                     break;
             }
@@ -69,11 +69,13 @@ namespace GPE
     bool Action::is_just_pressed() const { return m_state == State::JUST_PRESSED; }
     bool Action::is_just_released() const { return m_state == State::JUST_RELEASED; }
 
-    void Action::set_callback(void (*callback)(void* user_data, State state))
+    void Action::set_callback(void (*callback)(void* user_data, void* static_user_data,
+                                               State state))
     {
         this->callback = callback;
     }
-    void Action::set_callback(void (*callback)(void* user_data, State state),
+    void Action::set_callback(void (*callback)(void* user_data, void* static_user_data,
+                                               State state),
                               const CallbackMode mode)
     {
         this->callback = callback;
@@ -93,4 +95,5 @@ namespace GPE
     {
     }
     Input::Input(Action* const actions_array) : actions_array(actions_array) {}
+    void Action::set_static_user_data(void* other) { static_user_data = other; }
 }  // namespace GPE
