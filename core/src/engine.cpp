@@ -1,4 +1,6 @@
-#include "engine.h"
+#include <engine.h>
+
+#include "GLFW/glfw3.h"
 
 
 namespace GPE
@@ -36,10 +38,12 @@ namespace GPE
 
     void Engine::print_str(const char* str) { printf("%s\n", str); }
 
-    Engine::Engine(const char* name, int screen_width, int screen_height, const glm::vec4& bg_color)
+    Engine::Engine(const char* name, int screen_width, int screen_height, Input&& input,
+                   const glm::vec4& bg_color)
         : app_name(name),
           screen_height(screen_height),
           screen_width(screen_width),
+          input(std::move(input)),
           bg_color(bg_color)
     {
     }
@@ -59,7 +63,12 @@ namespace GPE
         hidden_on_screen.clear();
     }
 
-    bool Engine::should_quit() { return window && glfwWindowShouldClose(window); }
+    bool Engine::should_quit()
+    {
+        // TODO: set status with glfwSetWindowCloseCallback()
+        return status == RunStatus::QUITTING || (window && glfwWindowShouldClose(window));
+    }
+    void Engine::queue_quit() { status = RunStatus::QUITTING; }
 
     void Engine::quit()
     {
@@ -70,6 +79,7 @@ namespace GPE
 
     void Engine::init()
     {
+        status = RunStatus::UNINITED;
         if(!glfwInit())
         {
             printf("Failed to initialize GLFW\n");
@@ -98,6 +108,13 @@ namespace GPE
 
         glfwGetFramebufferSize(window, &screen_width, &screen_height);
         glfwSetWindowUserPointer(window, this);
+        glfwSetKeyCallback(window,
+                           [](GLFWwindow* window, int key, int scancode, int action, int mods)
+                           {
+                               static_cast<decltype(this)>(glfwGetWindowUserPointer(window))
+                                   ->input.key_cb(key, action == GLFW_PRESS, mods,
+                                                  glfwGetWindowUserPointer(window));
+                           });
         glfwMakeContextCurrent(window);
 
         gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
@@ -118,6 +135,7 @@ namespace GPE
         glViewport(0, 0, screen_width, screen_height);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        status = RunStatus::INITED;
     }
 
     void Engine::update()
